@@ -102,16 +102,16 @@ settings_matrix <- generate_settings_matrix(
 )
 
 ## -----------------------------------------------------------------------------
-
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 50,
+    nrow = 25,
     k_values = 50
 )
 
 settings_matrix <- add_settings_matrix_rows(
     settings_matrix,
-    nrow = 50,
+    nrow = 25,
     k_values = 80
 )
 

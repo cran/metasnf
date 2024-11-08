@@ -1,6 +1,6 @@
 Package: metasnf
 Title: Meta Clustering with Similarity Network Fusion
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: 
     c(
         person(
@@ -47,7 +47,7 @@ URL: https://branchlab.github.io/metasnf/,
         https://github.com/BRANCHlab/metasnf/
 BugReports: https://github.com/BRANCHlab/metasnf/issues
 NeedsCompilation: no
-Packaged: 2024-11-06 18:40:32 UTC; prashanth
+Packaged: 2024-11-08 17:44:46 UTC; prashanth
 Author: Prashanth S Velayudhan [aut, cre],
   Xiaoqiao Xu [aut],
   Prajkta Kallurkar [aut],
@@ -66,4 +66,4 @@ Author: Prashanth S Velayudhan [aut, cre],
   Anne L Wheeler [aut, ths]
 Maintainer: Prashanth S Velayudhan <psvelayu@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-11-08 15:00:08 UTC
+Date/Publication: 2024-11-08 23:20:02 UTC

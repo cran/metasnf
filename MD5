@@ -1,6 +1,6 @@
-2d11c9ccd48899c6182d52a6583c261a *DESCRIPTION
+5a9055de073dadbc253f801a35e4ce08 *DESCRIPTION
 22984167fd39228303c9652d5c82a983 *NAMESPACE
-3781cadc14cbe082b8a8312466322885 *NEWS.md
+eafd82e90205528724780ab18d252723 *NEWS.md
 3ac288458dc4c4ca7ef2717f050e7941 *R/alluvial_plot.R
 70115e4a572d94217bae8309dead9909 *R/batch_snf.R
 677dde7e1b797174e77d0dae8b14933f *R/clust_algs_list.R
@@ -23,7 +23,7 @@ f48a2141778d731871b4260a9b993f5e *R/nmi.R
 6c4549ee0f48ea0bbdd2614b1771b159 *R/solutions_matrix.R
 e321b29ed87f8b34e6d5abf68c1cc481 *R/utils.R
 b3fdf331a573ecb10806f605f8dec8af *R/weights_matrix.R
-7d1403324253b15f6b0ea6f6b1e299cd *README.md
+7193678c543c6c929d200d5b23133f0f *README.md
 22e48b700e34b49843d31a98bcd18eca *build/vignette.rds
 990f02aec8bd3325dc932144f266ce7e *data/abcd_anxiety.rda
 3f6a41a25793fb29d5533cd57901664b *data/abcd_colour.rda
@@ -59,7 +59,7 @@ df2b5e8085aee83805a90cedaca5b9f7 *inst/doc/alluvial_plots.R
 389cca410c3f78175bfa0dc24343cead *inst/doc/alluvial_plots.html
 481a50b87e2eb26d9bcdc52ea1139300 *inst/doc/clustering_algorithms.R
 bf0555f3872da3b8c01cc779e3f2672d *inst/doc/clustering_algorithms.Rmd
-1ba4b4964b659d3b0b314f443e121fab *inst/doc/clustering_algorithms.html
+bb70b25a213f45322c0eccda698d08ae *inst/doc/clustering_algorithms.html
 82cb7d2bae3cde9357c272731bddfbe8 *inst/doc/confounders.R
 98a2008787685eef89e04d673f6727c6 *inst/doc/confounders.Rmd
 f219deb69fb5266a9df7265de88870db *inst/doc/confounders.html
@@ -71,7 +71,7 @@ cb3b380cd423d754d9f366eef6e3677c *inst/doc/data_list.Rmd
 2575e6dc7663bc685eff9baf06ed735b *inst/doc/data_list.html
 a1376d1e073259b5336ee6b3bd5270a3 *inst/doc/distance_metrics.R
 a9bcaba964a5de0dfca9ad825476d48c *inst/doc/distance_metrics.Rmd
-8799e44f54b0dc9fe55a82bbc30e341d *inst/doc/distance_metrics.html
+ef9e06e153d9ab6e773006db5bc68eba *inst/doc/distance_metrics.html
 f95b6841c41bb1721dc07b8d4baa1e2d *inst/doc/feature_plots.R
 070938278f46055853550d72f8dc8b95 *inst/doc/feature_plots.Rmd
 8c406955d5f43b0fd3f81f04ce4ebeb6 *inst/doc/feature_plots.html
@@ -99,9 +99,9 @@ a1290134b875853343b00e29c05918f8 *inst/doc/parallel_processing.html
 0d4aa3b53e8df0201b3c5c9c53b64e41 *inst/doc/quality_measures.R
 820995740a74bb92c4ec14b9273f9c81 *inst/doc/quality_measures.Rmd
 4c2c1ac116becab4805b79e58fd071db *inst/doc/quality_measures.html
-e75a8b870dd151e031ab4790ac843cfd *inst/doc/settings_matrix.R
-785fd861ba2e092c879e9d033913538d *inst/doc/settings_matrix.Rmd
-1086a6b89b8e066eac6e2feb46cc63a8 *inst/doc/settings_matrix.html
+b8f9b1a47375fb6308f3a10d5003c2f8 *inst/doc/settings_matrix.R
+e25b76b6b33492c2c99be83017c44f63 *inst/doc/settings_matrix.Rmd
+5ac28b28b4ead66b1094c38989bcc565 *inst/doc/settings_matrix.html
 35ebe8552c0f5336dada2271dac42385 *inst/doc/similarity_matrix_heatmap.R
 fc7c84849f69b9da869b1e5cd68fbdd6 *inst/doc/similarity_matrix_heatmap.Rmd
 9157e5adfd55e772b0b5bf97e6ec60d5 *inst/doc/similarity_matrix_heatmap.html
@@ -301,7 +301,7 @@ b1574034a15c4428c2d7a121e29b9c1c *vignettes/methylation_heatmap.png
 b1e9ab06fc0bfa50d7d28a9268b5904f *vignettes/parallel_processing.Rmd
 ecea8c7a0d79b4e8974b05129febbaa6 *vignettes/pval_heatmap_ordered.png
 820995740a74bb92c4ec14b9273f9c81 *vignettes/quality_measures.Rmd
-785fd861ba2e092c879e9d033913538d *vignettes/settings_matrix.Rmd
+e25b76b6b33492c2c99be83017c44f63 *vignettes/settings_matrix.Rmd
 26a17132b70f0f91d9fecbd04717dbcd *vignettes/settings_matrix_heatmap_ordered.png
 fc7c84849f69b9da869b1e5cd68fbdd6 *vignettes/similarity_matrix_heatmap.Rmd
 7b01a531ecca46adf2cede4d6730a907 *vignettes/similarity_matrix_heatmap.png
