@@ -7,8 +7,8 @@
 get_dist_matrix(
   df,
   input_type,
-  cont_dist_fn,
-  disc_dist_fn,
+  cnt_dist_fn,
+  dsc_dist_fn,
   ord_dist_fn,
   cat_dist_fn,
   mix_dist_fn,
@@ -16,15 +16,15 @@ get_dist_matrix(
 )
 }
 \arguments{
-\item{df}{Raw dataframe with subject IDs in column "subjectkey"}
+\item{df}{Raw data frame with subject IDs in column "uid"}
 
 \item{input_type}{Either "numeric" (resulting in euclidean distances),
 "categorical" (resulting in binary distances), or "mixed" (resulting in
 gower distances)}
 
-\item{cont_dist_fn}{distance metric function for continuous data}
+\item{cnt_dist_fn}{distance metric function for continuous data}
 
-\item{disc_dist_fn}{distance metric function for discrete data}
+\item{dsc_dist_fn}{distance metric function for discrete data}
 
 \item{ord_dist_fn}{distance metric function for ordinal data}
 
@@ -32,12 +32,13 @@ gower distances)}
 
 \item{mix_dist_fn}{distance metric function for mixed data}
 
-\item{weights_row}{Single-row dataframe where the column names contain the
+\item{weights_row}{Single-row data frame where the column names contain the
 column names in df and the row contains the corresponding weights_row.}
 }
 \value{
 dist_matrix Matrix of inter-observation distances.
 }
 \description{
-Given a dataframe of numerical features, return a euclidean distance matrix.
+Given a data frame of numerical features, return a euclidean distance matrix.
 }
+\keyword{internal}

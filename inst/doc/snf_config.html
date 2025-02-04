@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>The SNF Config</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The SNF Config</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#creating-a-default-snf-config" id="toc-creating-a-default-snf-config">Creating a default SNF config</a>
+<ul>
+<li><a href="#the-settings-data-frame" id="toc-the-settings-data-frame">The settings data frame</a></li>
+<li><a href="#the-distance-functions-list" id="toc-the-distance-functions-list">The distance functions
+list</a></li>
+<li><a href="#the-clustering-functions-list" id="toc-the-clustering-functions-list">The clustering functions
+list</a></li>
+<li><a href="#the-weights-matrix" id="toc-the-weights-matrix">The
+weights matrix</a></li>
+</ul></li>
+<li><a href="#customizing-an-snf-config" id="toc-customizing-an-snf-config">Customizing an SNF config</a>
+<ul>
+<li><a href="#alpha-k-and-t" id="toc-alpha-k-and-t">Alpha, k, and
+t</a></li>
+<li><a href="#inclusion-columns-and-data-frame-dropout" id="toc-inclusion-columns-and-data-frame-dropout">Inclusion columns and
+data frame dropout</a></li>
+</ul></li>
+<li><a href="#grid-searching" id="toc-grid-searching">Grid
+searching</a></li>
+<li><a href="#assembling-an-snf-config-in-pieces" id="toc-assembling-an-snf-config-in-pieces">Assembling an SNF config in
+pieces</a></li>
+<li><a href="#settings_df-building-failed-to-converge" id="toc-settings_df-building-failed-to-converge">“<code>settings_df</code>
+building failed to converge”</a></li>
+</ul>
+</div>
+
+<p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/snf_config.Rmd">snf_config.Rmd</a></p>
+<p>This vignette outlines how to construct and use the SNF config, an
+object storing all the settings and hyperparameters required to convert
+data in a <code>data_list</code> class object into a space of cluster
+solutions.</p>
+<div id="creating-a-default-snf-config" class="section level2">
+<h2>Creating a default SNF config</h2>
+<p>The most minimal SNF config (<code>snf_config</code> class object)
+can be obtained by providing a data list into the
+<code>snf_config()</code> function.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(metasnf)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>dl <span class="ot">&lt;-</span> <span class="fu">data_list</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="fu">list</span>(cort_t, <span class="st">&quot;cortical_thickness&quot;</span>, <span class="st">&quot;neuroimaging&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    <span class="fu">list</span>(cort_sa, <span class="st">&quot;cortical_surface_area&quot;</span>, <span class="st">&quot;neuroimaging&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    <span class="fu">list</span>(subc_v, <span class="st">&quot;subcortical_volume&quot;</span>, <span class="st">&quot;neuroimaging&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>    <span class="fu">list</span>(income, <span class="st">&quot;household_income&quot;</span>, <span class="st">&quot;demographics&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="fu">list</span>(pubertal, <span class="st">&quot;pubertal_status&quot;</span>, <span class="st">&quot;demographics&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    <span class="at">uid =</span> <span class="st">&quot;unique_id&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(dl, <span class="at">n_solutions =</span> <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5
+## SNF hyperparameters:
+## alpha                    0.4  0.3  0.3  0.8  0.6
+## k                         48   14   85   98   34  
+## t                         20   20   20   20   20  
+## SNF scheme:
+##                            1    2    1    1    3  
+## Clustering functions:
+##                            1    2    2    2    2  
+## Distance functions:
+## CNT                        1    1    1    1    1  
+## DSC                        1    1    1    1    1  
+## ORD                        1    1    1    1    1  
+## CAT                        1    1    1    1    1  
+## MIX                        1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✔    ✔    ✖    ✔    ✔  
+## cortical_surface_area      ✔    ✖    ✔    ✔    ✔  
+## subcortical_volume         ✔    ✖    ✔    ✔    ✔  
+## household_income           ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✔    ✔    ✔    ✔    ✔  
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 5 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1 
+## $ mrisdp_2 1, 1, 1, 1, 1 
+## $ mrisdp_3 1, 1, 1, 1, 1 
+## $ mrisdp_4 1, 1, 1, 1, 1 
+## $ mrisdp_5 1, 1, 1, 1, 1 
+## …and 329 more features.</code></pre>
+<p>Similarity network fusion-based clustering pipelines require the
+following steps:</p>
+<ol style="list-style-type: decimal">
+<li>Selecting a set of data frames to integrate</li>
+<li>Converting those data frames into distance matrices using a distance
+function</li>
+<li>Converting those distance matrices to similarity matrices using the
+<code>SNFtool</code> package’s <code>affinityMatrix()</code>
+function</li>
+<li>Integrating the similarity matrices into one final similarity matrix
+using the <code>SNFtool</code> package’s <code>SNF()</code>
+function</li>
+<li>Converting that final similarity matrix into a cluster solution
+using a clustering function</li>
+</ol>
+<p>The SNF config is made up of four parts that all address various
+parts of that pipeline:</p>
+<ol style="list-style-type: decimal">
+<li>The <em>settings data frame</em> (class <code>settings_df</code>,
+extends class <code>data.frame</code>), which contains information about
+SNF-specific hyperparameters (step 4), which distance and clustering
+functions will be used (steps 2 and 5), and if any components of the
+data list (data frames) will be excluded on a particular run (step 1).
+Each row of the data frame corresponds to a complete set of settings
+that can yield a single cluster solution from the data list.</li>
+<li>The <em>distance functions list</em> (class
+<code>dist_fns_list</code>, extends class <code>list</code>), which
+stores the actual distance functions that are referenced in the settings
+data frame (step 2)</li>
+<li>The <em>clustering functions list</em> (class
+<code>clust_fns_list</code>, extends class <code>list</code>), which
+similarly stores clustering functions (step 5)</li>
+<li>The <em>weights matrix</em> (class <code>weights_matrix</code>,
+extends classes <code>matrix</code>, <code>array</code>), which contains
+feature weights to account for during the data to distance matrix
+conversion step (step 2).</li>
+</ol>
+<div id="the-settings-data-frame" class="section level3">
+<h3>The settings data frame</h3>
+<p>You can view the settings data frame in closer detail as follows:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>sc<span class="sc">$</span><span class="st">&quot;settings_df&quot;</span></span></code></pre></div>
+<pre><code>##                            1    2    3    4    5
+## SNF hyperparameters:
+## alpha                    0.4  0.3  0.3  0.8  0.6
+## k                         48   14   85   98   34  
+## t                         20   20   20   20   20  
+## SNF scheme:
+##                            1    2    1    1    3  
+## Clustering functions:
+##                            1    2    2    2    2  
+## Distance functions:
+## CNT                        1    1    1    1    1  
+## DSC                        1    1    1    1    1  
+## ORD                        1    1    1    1    1  
+## CAT                        1    1    1    1    1  
+## MIX                        1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✔    ✔    ✖    ✔    ✔  
+## cortical_surface_area      ✔    ✖    ✔    ✔    ✔  
+## subcortical_volume         ✔    ✖    ✔    ✔    ✔  
+## household_income           ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✔    ✔    ✔    ✔    ✔</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Printed as a regular data frame</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>sc<span class="sc">$</span><span class="st">&quot;settings_df&quot;</span> <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span></code></pre></div>
+<pre><code>##   solution alpha  k  t snf_scheme clust_alg cnt_dist dsc_dist ord_dist cat_dist
+## 1        1   0.4 48 20          1         1        1        1        1        1
+## 2        2   0.3 14 20          2         2        1        1        1        1
+## 3        3   0.3 85 20          1         2        1        1        1        1
+## 4        4   0.8 98 20          1         2        1        1        1        1
+## 5        5   0.6 34 20          3         2        1        1        1        1
+##   mix_dist inc_cortical_thickness inc_cortical_surface_area
+## 1        1                      1                         1
+## 2        1                      1                         0
+## 3        1                      0                         1
+## 4        1                      1                         1
+## 5        1                      1                         1
+##   inc_subcortical_volume inc_household_income inc_pubertal_status
+## 1                      1                    1                   1
+## 2                      0                    1                   1
+## 3                      1                    1                   1
+## 4                      1                    1                   1
+## 5                      1                    1                   1</code></pre>
+<p>The columns in a <code>settings_df</code> class object include:</p>
+<ul>
+<li><code>solution</code>: A label to keep track of each generated
+cluster solution.</li>
+<li><code>alpha</code>: The alpha (also referred to as sigma or eta in
+the original SNF paper) hyperparameter in SNF. This hyperparameter plays
+a role in converting distance matrices into similarity matrices. The
+process by which <code>SNFtool::affinityMatrix()</code> does this
+conversion essentially involves plugging the distance value as the
+x-coordinate of a normal distribution and pulling out the density at
+that point as the similarity. The thickness of the normal distribution
+is regulated by alpha, where a larger alpha leads to a broader normal
+distribution and a greater sensitivity to discriminating distances.</li>
+<li><code>k</code>: The k (nearest neighbours) hyperparameter in the
+distance matrix to similarity matrix conversion as well as in similarity
+network fusion. In the distance matrix to similarity matrix conversion
+(<code>SNFtool::affinityMatrix()</code>), k controls how many nearest
+neighbours to consider when calculating how similar each observation is
+to its nearest neighbours. The closer an observation is to its k nearest
+neighbours, the broader the normal distribution that is used for the
+distance to similarity conversion. For the similarity network fusion
+step (<code>SNFtool::SNF()</code>), k controls how intensely all the
+matrices should be sparsified before information is passed between them.
+With a very small k, say, k = 1, all the values in all the matrices will
+be reduced to 0 with the exception of one value between each observation
+and that observation’s most similar neighbour.</li>
+<li><code>t</code>: The T (number of iterations) hyperparameter used in
+SNF. A larger <code>t</code> results in more rounds of information
+passing between similarity matrices. SNF eventually converges, so
+overshooting this value offers no benefit but undershooting can yield
+inaccurate results. The original SNF developers recommend leaving this
+value at 20.</li>
+<li><code>snf_scheme</code>: Which SNF “scheme” is being used to convert
+the initial provided data frames into a final fused network (more on
+this in the <a href="https://branchlab.github.io/metasnf/articles/snf_schemes.html">SNF
+schemes vignette</a>).</li>
+<li><code>clust_alg</code>: Which clustering algorithm function from the
+<em>clustering functions list</em> of the config will be applied to the
+final fused network. You can learn more about using this parameter in
+the <a href="https://branchlab.github.io/metasnf/articles/clustering_algorithms.html">clustering
+algorithnms vignette</a>.</li>
+<li>Columns ending in <code>dist</code>: Which distance metric function
+from the <em>distance functions list</em> of the config will be used for
+each of the various types of features in the data list (more on this in
+the <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
+metrics vignette</a>).</li>
+<li>Columns starting with <code>inc</code>: Whether or not the
+corresponding data frame will be included (1) or excluded (0) from this
+row.</li>
+</ul>
+<p>By default, the <code>alpha</code> and <code>k</code> hyperparameters
+are randomly varied from 0.3 to 0.8 and 10 to 100 respectively based on
+suggestions from the original SNF paper. The <code>t</code>
+hyperparameter by default stays fixed at 20. The <code>snf_scheme</code>
+column varies randomly from 1 to 3, corresponding to each of the three
+differente schemes that are available. The <code>clust_alg</code>
+randomly varies between 1 and 2 for the two default clustering algoritm
+functions: (1) spectral clustering using the eigen-gap heuristic to
+calculate the number of clusters and (2) spectral clustering using the
+rotation cost heuristic. The distance columns will always be 1 by
+default, as there is only one default distance metric function per
+variable type: simple Euclidean for anything numeric and Gower’s
+distance for anything mixed or categorical.</p>
+</div>
+<div id="the-distance-functions-list" class="section level3">
+<h3>The distance functions list</h3>
+<p>The distance functions list is simply a list of functions capable of
+converting a data frame into a distance matrix. Distance functions
+within the list are organized based on what type of variable they deal
+with: continuous, discrete, ordinal, categorical, or mixed (any
+combination of the former 4).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>dfl <span class="ot">&lt;-</span> sc<span class="sc">$</span><span class="st">&quot;dist_fns_list&quot;</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>dfl</span></code></pre></div>
+<pre><code>## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">names</span>(dfl)</span></code></pre></div>
+<pre><code>## [1] &quot;cnt_dist_fns&quot; &quot;dsc_dist_fns&quot; &quot;ord_dist_fns&quot; &quot;cat_dist_fns&quot; &quot;mix_dist_fns&quot;</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>dfl<span class="sc">$</span><span class="st">&quot;cnt_dist_fns&quot;</span>[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>## function (df, weights_row) 
+## {
+##     weights &lt;- diag(weights_row, nrow = length(weights_row))
+##     weighted_df &lt;- as.matrix(df) %*% weights
+##     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = &quot;euclidean&quot;))
+##     return(distance_matrix)
+## }
+## &lt;bytecode: 0x56265ea3bc58&gt;
+## &lt;environment: namespace:metasnf&gt;</code></pre>
+<p>You can learn more about customizing distance metrics in the <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
+metrics vignette</a>.</p>
+</div>
+<div id="the-clustering-functions-list" class="section level3">
+<h3>The clustering functions list</h3>
+<p>The clustering functions list is similarly a list of functions
+capable of converting a similarity matrix into a cluster solution
+(numeric vector).</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>cfl <span class="ot">&lt;-</span> sc<span class="sc">$</span><span class="st">&quot;clust_fns_list&quot;</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>cfl</span></code></pre></div>
+<pre><code>## [1] spectral_eigen
+## [2] spectral_rot</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">names</span>(cfl)</span></code></pre></div>
+<pre><code>## [1] &quot;spectral_eigen&quot; &quot;spectral_rot&quot;</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>cfl[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>## function (similarity_matrix) 
+## {
+##     estimated_n &lt;- estimate_nclust_given_graph(W = similarity_matrix, 
+##         NUMC = 2:10)
+##     nclust_estimate &lt;- estimated_n$`Eigen-gap best`
+##     solution &lt;- SNFtool::spectralClustering(similarity_matrix, 
+##         nclust_estimate)
+##     return(solution)
+## }
+## &lt;bytecode: 0x56265df73ac0&gt;
+## &lt;environment: namespace:metasnf&gt;</code></pre>
+<p>You can learn more about customizing clustering functions in the <a href="https://branchlab.github.io/metasnf/articles/clustering_algorithms.html">clustering
+algorithnms vignette</a>.</p>
+</div>
+<div id="the-weights-matrix" class="section level3">
+<h3>The weights matrix</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>wm <span class="ot">&lt;-</span> sc<span class="sc">$</span><span class="st">&quot;weights_matrix&quot;</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>wm</span></code></pre></div>
+<pre><code>## Weights defined for 5 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1 
+## $ mrisdp_2 1, 1, 1, 1, 1 
+## $ mrisdp_3 1, 1, 1, 1, 1 
+## $ mrisdp_4 1, 1, 1, 1, 1 
+## $ mrisdp_5 1, 1, 1, 1, 1 
+## …and 329 more features.</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">class</span>(wm) <span class="ot">&lt;-</span> <span class="st">&quot;matrix&quot;</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>wm[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div>
+<pre><code>##      mrisdp_1 mrisdp_2 mrisdp_3 mrisdp_4 mrisdp_5
+## [1,]        1        1        1        1        1
+## [2,]        1        1        1        1        1
+## [3,]        1        1        1        1        1
+## [4,]        1        1        1        1        1
+## [5,]        1        1        1        1        1</code></pre>
+<p>There’s one row in the weights matrix corresponding to every row in
+the settings data frame and one column for every feature in the data
+list. By default, all the weights are set to 1, so no weighting
+occurs.</p>
+</div>
+</div>
+<div id="customizing-an-snf-config" class="section level2">
+<h2>Customizing an SNF config</h2>
+<p>When not specifying any parameters beyond the number of rows that are
+created, the function will randomly vary the values in the matrix.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># Through minimums and maximums</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>    dl,</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">100</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5    6    7    8    9   10
+## SNF hyperparameters:
+## alpha                    0.3  0.6  0.8  0.6  0.8  0.6  0.3  0.8  0.4  0.4
+## k                         81   64   17   71   82   90   11   51   91   30  
+## t                         20   20   20   20   20   20   20   20   20   20  
+## SNF scheme:
+##                            2    1    3    1    2    3    3    1    1    1  
+## Clustering functions:
+##                            2    1    1    1    1    2    1    1    1    1  
+## Distance functions:
+## CNT                        1    1    1    1    1    1    1    1    1    1  
+## DSC                        1    1    1    1    1    1    1    1    1    1  
+## ORD                        1    1    1    1    1    1    1    1    1    1  
+## CAT                        1    1    1    1    1    1    1    1    1    1  
+## MIX                        1    1    1    1    1    1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✖    ✔    ✔  
+## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## …and settings defined to create 90 more cluster solutions.
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 100 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## …and 329 more features.</code></pre>
+<div id="alpha-k-and-t" class="section level3">
+<h3>Alpha, k, and t</h3>
+<p>You can control any of these parameters either by providing a vector
+of values you’d like to randomly sample from or by specifying a minimum
+and maximum range.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># Through minimums and maximums</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>    dl,</span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">100</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a>    <span class="at">min_k =</span> <span class="dv">10</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>    <span class="at">max_k =</span> <span class="dv">60</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>    <span class="at">min_alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>    <span class="at">max_alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="co"># Through specific value sampling</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>    dl,</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>    <span class="at">k_values =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>),</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>    <span class="at">alpha_values =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.8</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.
+## ℹ No clustering functions specified. Using defaults.</code></pre>
+</div>
+<div id="inclusion-columns-and-data-frame-dropout" class="section level3">
+<h3>Inclusion columns and data frame dropout</h3>
+<p>Bounds on the number of input data frames removed as well as the way
+in which the number removed is chosen can be controlled.</p>
+<p>By default, the <code>settings_df</code> generated during the call to
+<code>snf_config()</code> will pick a random value between 0 (printed as
+a red X) and 1 (printed as a green checkmark) less than the total number
+of available data frames in the data list based on an exponential
+probability distribution. The exponential distribution makes it so that
+it is very likely that a small number of data frames will be dropped and
+much less likely that a large number of data frames will be dropped.</p>
+<p>You can control the distribution by changing the
+<code>dropout_dist</code> value to “uniform” (which will result in a
+much higher number of data frames being dropped on average) or “none”
+(which will result in no data frames being dropped).</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="co"># Exponential dropping</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>    dl,</span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>    <span class="at">dropout_dist =</span> <span class="st">&quot;exponential&quot;</span> <span class="co"># the default behaviour</span></span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5    6    7    8    9   10
+## SNF hyperparameters:
+## alpha                    0.4  0.7  0.6  0.5  0.8  0.3  0.8  0.3  0.8  0.4
+## k                         88   17   53   27   82   90   31   97   59   14  
+## t                         20   20   20   20   20   20   20   20   20   20  
+## SNF scheme:
+##                            3    2    1    1    2    1    2    2    3    3  
+## Clustering functions:
+##                            2    2    1    1    2    1    1    1    1    1  
+## Distance functions:
+## CNT                        1    1    1    1    1    1    1    1    1    1  
+## DSC                        1    1    1    1    1    1    1    1    1    1  
+## ORD                        1    1    1    1    1    1    1    1    1    1  
+## CAT                        1    1    1    1    1    1    1    1    1    1  
+## MIX                        1    1    1    1    1    1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## …and settings defined to create 10 more cluster solutions.
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 20 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## …and 329 more features.</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># Uniform dropping</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>    dl,</span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>    <span class="at">dropout_dist =</span> <span class="st">&quot;uniform&quot;</span></span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.
+## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5    6    7    8    9   10
+## SNF hyperparameters:
+## alpha                    0.7  0.3  0.6  0.5  0.6  0.3  0.8  0.4  0.5  0.5
+## k                         20   75   61   89   11   56   99   58   69   91  
+## t                         20   20   20   20   20   20   20   20   20   20  
+## SNF scheme:
+##                            2    2    1    2    2    3    3    2    2    1  
+## Clustering functions:
+##                            2    1    2    1    2    2    1    2    2    2  
+## Distance functions:
+## CNT                        1    1    1    1    1    1    1    1    1    1  
+## DSC                        1    1    1    1    1    1    1    1    1    1  
+## ORD                        1    1    1    1    1    1    1    1    1    1  
+## CAT                        1    1    1    1    1    1    1    1    1    1  
+## MIX                        1    1    1    1    1    1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✖    ✖    ✖    ✖    ✖    ✔    ✔    ✔    ✔    ✖  
+## cortical_surface_area      ✖    ✖    ✖    ✔    ✖    ✔    ✖    ✔    ✔    ✖  
+## subcortical_volume         ✖    ✖    ✔    ✖    ✖    ✔    ✔    ✖    ✔    ✖  
+## household_income           ✔    ✔    ✔    ✖    ✖    ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✖    ✖    ✖    ✖    ✔    ✔    ✔    ✔    ✔    ✖  
+## …and settings defined to create 10 more cluster solutions.
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 20 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## …and 329 more features.</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="co"># No dropping</span></span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>    dl,</span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>    <span class="at">dropout_dist =</span> <span class="st">&quot;none&quot;</span></span>
+<span id="cb45-6"><a href="#cb45-6" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.
+## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5    6    7    8    9   10
+## SNF hyperparameters:
+## alpha                    0.5  0.8  0.4  0.8  0.8  0.7  0.7  0.6  0.8  0.7
+## k                         37   12   20   79   86   40   48   96   78   55  
+## t                         20   20   20   20   20   20   20   20   20   20  
+## SNF scheme:
+##                            2    2    3    3    2    3    2    3    1    2  
+## Clustering functions:
+##                            2    2    2    2    2    1    1    2    2    1  
+## Distance functions:
+## CNT                        1    1    1    1    1    1    1    1    1    1  
+## DSC                        1    1    1    1    1    1    1    1    1    1  
+## ORD                        1    1    1    1    1    1    1    1    1    1  
+## CAT                        1    1    1    1    1    1    1    1    1    1  
+## MIX                        1    1    1    1    1    1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## …and settings defined to create 10 more cluster solutions.
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 20 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## …and 329 more features.</code></pre>
+<p>The bounds on the number of data frames that can be dropped can be
+controlled using the <code>min_removed_inputs</code> and
+<code>max_removed_inputs</code>:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a>    dl,</span>
+<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a>    <span class="at">min_removed_inputs =</span> <span class="dv">3</span></span>
+<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="co"># No row will exclude fewer than 3 data frames during SNF</span></span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5    6    7    8    9   10
+## SNF hyperparameters:
+## alpha                    0.3  0.5  0.6  0.3  0.7  0.5  0.3  0.3  0.7  0.5
+## k                         56   36   57   74   63   90   82   63   37   23  
+## t                         20   20   20   20   20   20   20   20   20   20  
+## SNF scheme:
+##                            1    2    1    3    2    2    2    3    3    2  
+## Clustering functions:
+##                            2    2    1    1    1    2    2    1    1    1  
+## Distance functions:
+## CNT                        1    1    1    1    1    1    1    1    1    1  
+## DSC                        1    1    1    1    1    1    1    1    1    1  
+## ORD                        1    1    1    1    1    1    1    1    1    1  
+## CAT                        1    1    1    1    1    1    1    1    1    1  
+## MIX                        1    1    1    1    1    1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✖    ✖    ✔    ✔    ✔    ✔    ✖    ✔    ✖    ✔  
+## cortical_surface_area      ✖    ✔    ✖    ✖    ✖    ✖    ✔    ✖    ✖    ✖  
+## subcortical_volume         ✔    ✔    ✖    ✖    ✔    ✖    ✔    ✔    ✖    ✖  
+## household_income           ✔    ✖    ✔    ✖    ✖    ✖    ✖    ✖    ✔    ✔  
+## pubertal_status            ✖    ✖    ✖    ✔    ✖    ✔    ✖    ✖    ✔    ✖  
+## …and settings defined to create 10 more cluster solutions.
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 20 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… 
+## …and 329 more features.</code></pre>
+</div>
+</div>
+<div id="grid-searching" class="section level2">
+<h2>Grid searching</h2>
+<p>If you are interested in grid searching over perhaps just a specific
+set of alpha and k values, you may want to consider varying those
+parameters and keeping everything else fixed:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a>    dl,</span>
+<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">10</span>,</span>
+<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>    <span class="at">alpha_values =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>),</span>
+<span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a>    <span class="at">k_values =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">60</span>),</span>
+<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a>    <span class="at">dropout_dist =</span> <span class="st">&quot;none&quot;</span></span>
+<span id="cb54-7"><a href="#cb54-7" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>sc</span></code></pre></div>
+<pre><code>## Settings Data Frame:
+##                            1    2    3    4    5    6    7    8    9   10
+## SNF hyperparameters:
+## alpha                    0.8  0.5  0.8  0.3  0.5  0.3  0.5  0.5  0.8  0.5
+## k                         40   40   40   20   20   60   40   60   60   20  
+## t                         20   20   20   20   20   20   20   20   20   20  
+## SNF scheme:
+##                            1    2    3    1    2    3    3    2    1    3  
+## Clustering functions:
+##                            1    2    2    2    2    1    2    1    2    2  
+## Distance functions:
+## CNT                        1    1    1    1    1    1    1    1    1    1  
+## DSC                        1    1    1    1    1    1    1    1    1    1  
+## ORD                        1    1    1    1    1    1    1    1    1    1  
+## CAT                        1    1    1    1    1    1    1    1    1    1  
+## MIX                        1    1    1    1    1    1    1    1    1    1  
+## Component dropout:
+## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  
+## Distance Functions List:
+## Continuous (1):
+## [1] euclidean_distance
+## Discrete (1):
+## [1] euclidean_distance
+## Ordinal (1):
+## [1] euclidean_distance
+## Categorical (1):
+## [1] gower_distance
+## Mixed (1):
+## [1] gower_distance
+## Clustering Functions List:
+## [1] spectral_eigen
+## [2] spectral_rot
+## Weights Matrix:
+## Weights defined for 10 cluster solutions.
+## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 
+## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 
+## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 
+## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 
+## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 
+## …and 329 more features.</code></pre>
+</div>
+<div id="assembling-an-snf-config-in-pieces" class="section level2">
+<h2>Assembling an SNF config in pieces</h2>
+<p>Rather than varying everything equally all at once, you may be
+interested in looking at “chunks” of solution spaces that are based on
+distinct SNF configs. For example, you may want to look at 25 solutions
+generated with k = 50 and look at another 25 solutions generated with k
+= 80. You can build two separate SNF configs and join them using the
+<code>merge()</code> function.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a>sc_1 <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb59-3"><a href="#cb59-3" tabindex="-1"></a>    dl,</span>
+<span id="cb59-4"><a href="#cb59-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">25</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" tabindex="-1"></a>    <span class="at">k_values =</span> <span class="dv">50</span></span>
+<span id="cb59-6"><a href="#cb59-6" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
+<pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>sc_2 <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>    dl,</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">25</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a>    <span class="at">k_values =</span> <span class="dv">80</span></span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## ℹ No distance functions specified. Using defaults.
+## ℹ No clustering functions specified. Using defaults.</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>full_sc <span class="ot">&lt;-</span> <span class="fu">merge</span>(sc_1, sc_2)</span></code></pre></div>
+</div>
+<div id="settings_df-building-failed-to-converge" class="section level2">
+<h2>“<code>settings_df</code> building failed to converge”</h2>
+<p><code>snf_config()</code> will never build duplicate rows. A
+consequence of this is that if you request a very large number of rows
+over a very small range of possible values to vary over, it will be
+impossible for the matrix to be built. For example, there’s no way to
+generate 10 unique rows when the only varying parameter is which of two
+clustering algorithms is used - only 2 rows could ever be created. If
+you encounter the error “Matrix building failed”, try to generate fewer
+rows or to be a little less strict with what values are allowed.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

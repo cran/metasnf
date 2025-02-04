@@ -2,17 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{numcol_to_numeric}
 \alias{numcol_to_numeric}
-\title{Convert dataframe columns to numeric type}
+\title{Convert columns of a data frame to numeric type (if possible)}
 \usage{
 numcol_to_numeric(df)
 }
 \arguments{
-\item{df}{A dataframe}
+\item{df}{A data frame.}
 }
 \value{
-df The dataframe with all possible columns converted to type numeric
+The data frame coercible columns converted to type numeric.
 }
 \description{
-Converts all columns in a dataframe that can be converted to numeric type to
+Converts all columns in a data frame that can be converted to numeric type to
 numeric type.
 }
+\keyword{internal}

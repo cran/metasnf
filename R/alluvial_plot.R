@@ -1,30 +1,47 @@
 #' Alluvial plot of patients across cluster counts and important features
 #'
-#' @param cluster_sequence A list of clustering algorithms (typically, the same
-#' algorithm varied over different numbers of clusters).
+#' This alluvial plot shows how observations in a similarity matrix could
+#' have been clustered over a set of clustering functions.
 #'
+#' @param cluster_sequence A list of clustering algorithms.
 #' @param similarity_matrix A similarity matrix.
-#'
-#' @param data_list A nested list of input data from `generate_data_list()`.
-#'
-#' @param data A dataframe that contains features to include in the plot.
-#'
+#' @param dl A data list.
+#' @param data A data frame that contains any features to include in the plot.
 #' @param key_outcome The name of the feature that determines how each patient
-#' stream is coloured in the alluvial plot.
-#'
+#'  stream is coloured in the alluvial plot.
 #' @param key_label Name of key outcome to be used for the plot legend.
-#'
 #' @param title Title of the plot.
-#'
 #' @param extra_outcomes Names of additional features to add to the plot.
-#'
 #' @return An alluvial plot (class "gg" and "ggplot") showing distribution of
 #' a feature across varying number cluster solutions.
-#'
 #' @export
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 1)
+#' 
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' 
+#' sim_mats <- sim_mats_list(sol_df)
+#' 
+#' clust_fn_sequence <- list(spectral_two, spectral_four)
+#' 
+#' alluvial_cluster_plot(
+#'     cluster_sequence = clust_fn_sequence,
+#'     similarity_matrix = sim_mats[[1]],
+#'     dl = input_dl,
+#'     key_outcome = "gender", # the name of the feature of interest
+#'     key_label = "Gender", # how the feature of interest should be displayed
+#'     extra_outcomes = "diagnosis", # more features to plot but not colour by
+#'     title = "Gender Across Cluster Counts"
+#' )
 alluvial_cluster_plot <- function(cluster_sequence,
                                   similarity_matrix,
-                                  data_list = NULL,
+                                  dl = NULL,
                                   data = NULL,
                                   key_outcome,
                                   key_label = key_outcome,
@@ -41,11 +58,10 @@ alluvial_cluster_plot <- function(cluster_sequence,
     ###########################################################################
     # Calculate the cluster solutions for each cluster algorithm provided
     ###########################################################################
-    alluvial_df <- data.frame(subjectkey = colnames(similarity_matrix))
+    alluvial_df <- data.frame(uid = colnames(similarity_matrix))
     for (algorithm in cluster_sequence) {
-        cluster_output <- algorithm(similarity_matrix)
-        solution <- cluster_output$"solution"
-        nclust <- cluster_output$"nclust"
+        solution <- algorithm(similarity_matrix)
+        nclust <- length(unique(solution))
         solution_col <- data.frame(solution)
         colnames(solution_col) <- paste0("c", nclust)
         alluvial_df <- cbind(alluvial_df, solution_col)
@@ -53,16 +69,16 @@ alluvial_cluster_plot <- function(cluster_sequence,
     ###########################################################################
     # Isolate feature of interest
     ###########################################################################
-    data <- assemble_data(data = data, data_list = data_list)
-    outcome_df_cols <- c("subjectkey", key_outcome, extra_outcomes)
+    data <- assemble_data(data = data, dl = dl)
+    outcome_df_cols <- c("uid", key_outcome, extra_outcomes)
     outcome_df <- data[, colnames(data) %in% outcome_df_cols]
     alluvial_df <- dplyr::inner_join(
         alluvial_df,
         outcome_df,
-        by = "subjectkey"
+        by = "uid"
     )
     alluvial_df <- alluvial_df |>
-        dplyr::select(-dplyr::contains("subjectkey")) |>
+        drop_cols("uid") |>
         dplyr::group_by(dplyr::across(0:(ncol(alluvial_df) - 1))) |>
         dplyr::summarize("frequency" = dplyr::n(), .groups = "keep") |>
         data.frame()

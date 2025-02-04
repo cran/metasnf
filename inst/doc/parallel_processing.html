@@ -353,7 +353,7 @@ div.aside { background-color:#fff2e6; }
 </style>
 <p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_processing.Rmd">parallel_processing.Rmd</a></p>
 <p>metasnf can use <a href="https://future.apply.futureverse.org/">future apply</a> to run the
-rows of a settings matrix in parallel.</p>
+rows of a settings data frame in parallel.</p>
 <p>Parallel processing has some overhead cost, so it’s possible that
 your particular situation won’t greatly benefit (or may even run slower)
 with parallel processing enabled.</p>
@@ -366,7 +366,7 @@ help speed things up quite a lot.</p>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(metasnf)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Setting up the data</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>data_list <span class="ot">&lt;-</span> <span class="fu">generate_data_list</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>dl <span class="ot">&lt;-</span> <span class="fu">data_list</span>(</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    <span class="fu">list</span>(cort_t, <span class="st">&quot;cortical_thickness&quot;</span>, <span class="st">&quot;neuroimaging&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>    <span class="fu">list</span>(cort_sa, <span class="st">&quot;cortical_surface_area&quot;</span>, <span class="st">&quot;neuroimaging&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="fu">list</span>(subc_v, <span class="st">&quot;subcortical_volume&quot;</span>, <span class="st">&quot;neuroimaging&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
@@ -375,17 +375,17 @@ help speed things up quite a lot.</p>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>    <span class="at">uid =</span> <span class="st">&quot;unique_id&quot;</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>)</span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co"># Specifying 10 different sets of settings for SNF</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>settings_matrix <span class="ot">&lt;-</span> <span class="fu">generate_settings_matrix</span>(</span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>    data_list,</span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">10</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>    <span class="at">dl =</span> dl,</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">10</span>,</span>
 <span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>    <span class="at">max_k =</span> <span class="dv">40</span></span>
 <span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>)</span>
 <span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>solutions_matrix <span class="ot">&lt;-</span> <span class="fu">batch_snf</span>(</span>
-<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    data_list,</span>
-<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>    settings_matrix,</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>sol_df <span class="ot">&lt;-</span> <span class="fu">batch_snf</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    dl,</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>    sc,</span>
 <span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>    <span class="at">processes =</span> <span class="st">&quot;max&quot;</span> <span class="co"># Can also be a specific integer</span></span>
 <span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>)</span></code></pre></div>
 </div>
@@ -394,9 +394,9 @@ help speed things up quite a lot.</p>
 <p>Use the progressr package to visualize the progress of parallel
 batch_snf.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>progressr<span class="sc">::</span><span class="fu">with_progress</span>({</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>    solutions_matrix <span class="ot">&lt;-</span> <span class="fu">batch_snf</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>        data_list,</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>        settings_matrix,</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>    sol_df <span class="ot">&lt;-</span> <span class="fu">batch_snf</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>        dl,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>        sc,</span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>        <span class="at">processes =</span> <span class="st">&quot;max&quot;</span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>    )</span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>})</span></code></pre></div>
@@ -407,17 +407,15 @@ batch_snf.</p>
 find.</p>
 <p>If you want to dial things back a little, you can specify more
 precisely the number of processes you want:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>solutions_matrix <span class="ot">&lt;-</span> <span class="fu">batch_snf</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    data_list,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    settings_matrix,</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>sol_df <span class="ot">&lt;-</span> <span class="fu">batch_snf</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    dl,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    sc,</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">processes =</span> <span class="dv">4</span></span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>To find out how many processes you have access to (or at least, how
-many metasnf will think you have access to), use the
+many <code>metasnf</code> will think you have access to), use the
 <code>availableCores()</code> function from the future package:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(future)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">availableCores</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>future<span class="sc">::</span><span class="fu">availableCores</span>()</span></code></pre></div>
 </div>
 
 

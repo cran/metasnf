@@ -5,19 +5,17 @@
 \title{Heatmap of p-values}
 \usage{
 pval_heatmap(
-  pvals,
+  ext_sol_df,
   order = NULL,
   cluster_columns = TRUE,
   cluster_rows = FALSE,
   show_row_names = FALSE,
   show_column_names = TRUE,
   min_colour = "red2",
-  mid_colour = "lightyellow",
-  max_colour = "slateblue4",
-  legend_breaks = c(0, 0.5, 1),
-  col = circlize::colorRamp2(legend_breaks, c(min_colour, mid_colour, max_colour)),
-  heatmap_legend_param = list(color_bar = "continuous", title = "p-value", at = c(0, 0.5,
-    1)),
+  max_colour = "white",
+  legend_breaks = c(0, 1),
+  col = circlize::colorRamp2(legend_breaks, c(min_colour, max_colour)),
+  heatmap_legend_param = list(color_bar = "continuous", title = "p-value", at = c(0, 1)),
   rect_gp = grid::gpar(col = "black"),
   column_split_vector = NULL,
   row_split_vector = NULL,
@@ -27,7 +25,8 @@ pval_heatmap(
 )
 }
 \arguments{
-\item{pvals}{A matrix of p-values.}
+\item{ext_sol_df}{An ext_solutions_df class object (produced from
+the function \code{extend_solutions}.}
 
 \item{order}{Numeric vector containing row order of the heatmap.}
 
@@ -42,8 +41,6 @@ clustering.}
 \item{show_column_names}{Whether column names should be shown.}
 
 \item{min_colour}{Colour used for the lowest value in the heatmap.}
-
-\item{mid_colour}{Colour used for the middle value in the heatmap.}
 
 \item{max_colour}{Colour used for the highest value in the heatmap.}
 
@@ -71,4 +68,27 @@ that displays the provided p-values.
 }
 \description{
 Heatmap of p-values
+}
+\examples{
+#dl <- data_list(
+#    list(income, "household_income", "demographics", "ordinal"),
+#    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#    list(anxiety, "anxiety", "behaviour", "ordinal"),
+#    list(depress, "depressed", "behaviour", "ordinal"),
+#    uid = "unique_id"
+#)
+#
+#sc <- snf_config(
+#    dl,
+#    n_solutions = 4,
+#    dropout_dist = "uniform",
+#    max_k = 50
+#)
+#
+#sol_df <- batch_snf(dl, sc)
+#
+#ext_sol_df <- extend_solutions(sol_df, dl)
+#
+#pval_heatmap(ext_sol_df)
 }

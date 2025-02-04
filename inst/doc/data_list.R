@@ -1,6 +1,9 @@
 ## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 
+## ----echo = FALSE-------------------------------------------------------------
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+
 ## -----------------------------------------------------------------------------
 library(metasnf)
 
@@ -29,7 +32,7 @@ city_df <- data.frame(
 )
 
 # Generating a data_list explicitly (Name each nested list element):
-data_list <- generate_data_list(
+dl <- data_list(
     list(
         data = heart_rate_df,
         name = "heart_rate",
@@ -58,7 +61,7 @@ data_list <- generate_data_list(
 )
 
 # Achieving the same result compactly:
-data_list <- generate_data_list(
+dl <- data_list(
     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
     list(personality_test_df, "personality_test", "surveys", "continuous"),
     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -67,7 +70,7 @@ data_list <- generate_data_list(
 )
 
 # Printing data_list summaries
-summarize_dl(data_list)
+summary(dl)
 
 ## -----------------------------------------------------------------------------
 list_of_lists <- list(
@@ -76,10 +79,10 @@ list_of_lists <- list(
 )
 
 ## -----------------------------------------------------------------------------
-dl <- generate_data_list(
+dl <- data_list(
     list_of_lists,
     uid = "patient_id"
 )
 
-summarize_dl(dl)
+summary(dl)
 

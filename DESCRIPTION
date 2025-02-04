@@ -1,6 +1,6 @@
 Package: metasnf
 Title: Meta Clustering with Similarity Network Fusion
-Version: 1.1.2
+Version: 2.0.0
 Authors@R: 
     c(
         person(
@@ -34,11 +34,12 @@ Description: Framework to facilitate patient subtyping with similarity network f
 License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-Imports: cluster, digest, dplyr, ggplot2, grDevices, MASS, mclust,
-        methods, progressr, purrr, rlang, SNFtool, stats, tidyr, utils
+Imports: cli, cluster, data.table, digest, dplyr, ggplot2, grDevices,
+        MASS, mclust, methods, progressr, purrr, RColorBrewer, rlang,
+        SNFtool, stats, tibble, tidyr, utils
 Suggests: circlize, ComplexHeatmap, InteractiveComplexHeatmap, clv,
         future, future.apply, knitr, rmarkdown, testthat (>= 3.0.0),
-        ggalluvial, dbscan
+        ggalluvial, lifecycle, dbscan
 Config/testthat/edition: 3
 Depends: R (>= 4.1.0)
 LazyData: true
@@ -47,7 +48,7 @@ URL: https://branchlab.github.io/metasnf/,
         https://github.com/BRANCHlab/metasnf/
 BugReports: https://github.com/BRANCHlab/metasnf/issues
 NeedsCompilation: no
-Packaged: 2024-11-08 17:44:46 UTC; prashanth
+Packaged: 2025-02-04 20:10:05 UTC; prashanth
 Author: Prashanth S Velayudhan [aut, cre],
   Xiaoqiao Xu [aut],
   Prajkta Kallurkar [aut],
@@ -66,4 +67,4 @@ Author: Prashanth S Velayudhan [aut, cre],
   Anne L Wheeler [aut, ths]
 Maintainer: Prashanth S Velayudhan <psvelayu@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-11-08 23:20:02 UTC
+Date/Publication: 2025-02-04 21:00:02 UTC

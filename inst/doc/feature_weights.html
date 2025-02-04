@@ -355,14 +355,15 @@ div.aside { background-color:#fff2e6; }
 <div id="generating-and-using-the-weights-matrix" class="section level2">
 <h2>Generating and Using the Weights Matrix</h2>
 <p>The <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
-metrics</a> used in metasnf are all capable of applying custom weights
-to included features. The code below outlines how to generate and use a
-weights_matrix (dataframe containing feature weights) object.</p>
+metrics</a> used in <code>metasnf</code> are all capable of applying
+custom weights to included features. The code below outlines how to
+generate and use a weights_matrix (data frame containing feature
+weights) object.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(metasnf)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># Make sure to throw in all the data you&#39;re interested in visualizing for this</span></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># data_list, including out-of-model measures and confounding features.</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>data_list <span class="ot">&lt;-</span> <span class="fu">generate_data_list</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>dl <span class="ot">&lt;-</span> <span class="fu">data_list</span>(</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    <span class="fu">list</span>(income, <span class="st">&quot;household_income&quot;</span>, <span class="st">&quot;demographics&quot;</span>, <span class="st">&quot;ordinal&quot;</span>),</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>    <span class="fu">list</span>(pubertal, <span class="st">&quot;pubertal_status&quot;</span>, <span class="st">&quot;demographics&quot;</span>, <span class="st">&quot;continuous&quot;</span>),</span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="fu">list</span>(fav_colour, <span class="st">&quot;favourite_colour&quot;</span>, <span class="st">&quot;demographics&quot;</span>, <span class="st">&quot;categorical&quot;</span>),</span>
@@ -370,79 +371,82 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>    <span class="fu">list</span>(depress, <span class="st">&quot;depressed&quot;</span>, <span class="st">&quot;behaviour&quot;</span>, <span class="st">&quot;ordinal&quot;</span>),</span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>    <span class="at">uid =</span> <span class="st">&quot;unique_id&quot;</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>)</span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; Warning in generate_data_list(list(income, &quot;household_income&quot;, &quot;demographics&quot;,</span></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; : 188 subject(s) dropped due to incomplete data.</span></span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="fu">summarize_dl</span>(data_list)</span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt;               name        type       domain length width</span></span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; 1 household_income     ordinal demographics     87     2</span></span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; 2  pubertal_status  continuous demographics     87     2</span></span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; 3 favourite_colour categorical demographics     87     2</span></span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; 4          anxiety     ordinal    behaviour     87     2</span></span>
-<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt; 5        depressed     ordinal    behaviour     87     2</span></span>
-<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>settings_matrix <span class="ot">&lt;-</span> <span class="fu">generate_settings_matrix</span>(</span>
-<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>    data_list,</span>
-<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">20</span>,</span>
-<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>    <span class="at">min_k =</span> <span class="dv">20</span>,</span>
-<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>    <span class="at">max_k =</span> <span class="dv">50</span></span>
-<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>)</span>
-<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>weights_matrix <span class="ot">&lt;-</span> <span class="fu">generate_weights_matrix</span>(</span>
-<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>    data_list,</span>
-<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">20</span></span>
-<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a>)</span>
-<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a><span class="fu">head</span>(weights_matrix)</span>
-<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="co">#&gt;      household_income pubertal_status colour cbcl_anxiety_r cbcl_depress_r</span></span>
-<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="co">#&gt; [1,]                1               1      1              1              1</span></span>
-<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a><span class="co">#&gt; [2,]                1               1      1              1              1</span></span>
-<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a><span class="co">#&gt; [3,]                1               1      1              1              1</span></span>
-<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a><span class="co">#&gt; [4,]                1               1      1              1              1</span></span>
-<span id="cb1-43"><a href="#cb1-43" tabindex="-1"></a><span class="co">#&gt; [5,]                1               1      1              1              1</span></span>
-<span id="cb1-44"><a href="#cb1-44" tabindex="-1"></a><span class="co">#&gt; [6,]                1               1      1              1              1</span></span></code></pre></div>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; ℹ 188 observations dropped due to incomplete data.</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="fu">summary</span>(dl)</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt;               name        type       domain length width</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; 1 household_income     ordinal demographics     87     1</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; 2  pubertal_status  continuous demographics     87     1</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; 3 favourite_colour categorical demographics     87     1</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; 4          anxiety     ordinal    behaviour     87     1</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; 5        depressed     ordinal    behaviour     87     1</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>    dl,</span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>    <span class="at">min_k =</span> <span class="dv">20</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>    <span class="at">max_k =</span> <span class="dv">50</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>)</span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>sc<span class="sc">$</span><span class="st">&quot;weights_matrix&quot;</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co">#&gt; $ household_income 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="co">#&gt; $ pubertal_status 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a><span class="co">#&gt; $ colour 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="co">#&gt; $ cbcl_anxiety_r 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="co">#&gt; $ cbcl_depress_r 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span></span></code></pre></div>
 <p>By default, the weights are all 1. This is what
 <code>batch_snf</code> uses when no weights_matrix is supplied.</p>
 <p>If you have custom feature weights you’d like to be used you can
-manually populate this dataframe. There’s one column per feature (no
+manually populate this data frame. There’s one column per feature (no
 need to worry about column orders) and the number of rows should match
-the number of rows in the settings_matrix.</p>
+the number of rows in the SNF config.</p>
 <p>If you are just looking to broaden the space of cluster solutions you
 generate, you can use some of the built-in randomization options for the
 weights:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Random uniformly distributed values</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">generate_weights_matrix</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>    data_list,</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">5</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;uniform&quot;</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>)</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;      household_income pubertal_status    colour cbcl_anxiety_r cbcl_depress_r</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [1,]       0.08161542       0.3198375 0.8328815      0.9943410      0.3955367</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; [2,]       0.40378037       0.4627980 0.3132912      0.7119147      0.9593465</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; [3,]       0.83551451       0.9353873 0.2794196      0.4951427      0.1132382</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; [4,]       0.59499701       0.5917005 0.7100717      0.8079317      0.2355968</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; [5,]       0.35140389       0.5460431 0.3481677      0.5611197      0.5104740</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co"># Random exponentially distributed values</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="fu">generate_weights_matrix</span>(</span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>    data_list,</span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">5</span>,</span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;exponential&quot;</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>)</span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt;      household_income pubertal_status    colour cbcl_anxiety_r cbcl_depress_r</span></span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; [1,]        0.5123907       0.1624127 1.6042481      3.7447548     1.53441037</span></span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; [2,]        3.9471338       0.4178442 0.2354796      0.3647522     0.22186034</span></span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; [3,]        0.4215409       0.2394908 0.1519102      0.8262260     0.03348363</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; [4,]        1.4107604       2.3230736 2.0428148      0.2279961     0.48877057</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; [5,]        0.1756311       0.5256458 1.3623835      0.1072554     0.24304379</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>    dl,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>    <span class="at">min_k =</span> <span class="dv">20</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>    <span class="at">max_k =</span> <span class="dv">50</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    <span class="at">weights_fill =</span> <span class="st">&quot;uniform&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>sc<span class="sc">$</span><span class="st">&quot;weights_matrix&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; $ household_income 0.08161542, 0.40378037, 0.83551451, 0.59499701, 0.351… </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; $ pubertal_status 0.39553669, 0.95934650, 0.11323819, 0.23559680, 0.510… </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; $ colour 0.07772700, 0.76282288, 0.15224422, 0.93752397, 0.745… </span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; $ cbcl_anxiety_r 0.15473680, 0.20350748, 0.14351450, 0.61093017, 0.516… </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; $ cbcl_depress_r 0.02428327, 0.60967042, 0.47194860, 0.10858025, 0.864…</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co"># Random exponentially distributed values</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>    dl,</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">20</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>    <span class="at">min_k =</span> <span class="dv">20</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>    <span class="at">max_k =</span> <span class="dv">50</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>    <span class="at">weights_fill =</span> <span class="st">&quot;exponential&quot;</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>)</span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>sc<span class="sc">$</span><span class="st">&quot;weights_matrix&quot;</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; $ household_income 2.27094485, 0.16919903, 0.18456918, 0.33487595, 1.167… </span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; $ pubertal_status 0.1528647, 0.4143784, 0.7710409, 1.7987298, 1.4162029… </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; $ colour 1.54348805, 0.82288484, 2.54124213, 0.60145639, 1.089… </span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; $ cbcl_anxiety_r 0.21682983, 3.68043243, 1.25420312, 1.15417982, 0.102… </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; $ cbcl_depress_r 0.1307026, 1.8525605, 4.1633331, 1.2926046, 1.6980694…</span></span></code></pre></div>
 <p>Once you’re happy with your weights_matrix, you can pass it into
 batch_snf:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">batch_snf</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    <span class="at">data_list =</span> data_list,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">settings_matrix =</span> settings_matrix,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">weights_matrix =</span> weights_matrix</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">batch_snf</span>(<span class="at">dl =</span> dl, <span class="at">sc =</span> sc)</span></code></pre></div>
 </div>
 <div id="the-nitty-gritty-of-how-weights-are-used" class="section level2">
 <h2>The Nitty Gritty of How Weights are Used</h2>
@@ -452,9 +456,9 @@ learn more about in the <a href="https://branchlab.github.io/metasnf/articles/di
 metrics vignette</a>.</p>
 <p>The other aspect to understand if you want to know precisely how your
 weights are being used is related to the SNF schemes. Depending on which
-scheme is specified in the settings_matrix row, the feature columns that
-are involved at each distance matrix calculation can differ
-substantially.</p>
+scheme is specified in the corresponding <code>settings_df</code> of the
+SNF config, the feature columns that are involved at each distance
+matrix calculation can differ substantially.</p>
 <p>For example, in the domain scheme, all features of the same domain
 are concatenated prior to distance matrix calculation. If you have any
 domains with multiple types of features (e.g., continuous and
@@ -462,16 +466,16 @@ categorical), that will mean that the mixed distance metric (Gower’s
 method by default) will be used, and weights will be applied but only on
 a per-domain basis.</p>
 <p>Here’s a more concrete example on how data set-up and SNF scheme can
-influence the feature weighting process: consider generating a data_list
-where every single input dataframe contains only 1 input feature. If
-that data_list is processed exclusively using the “individual” SNF
-scheme, <em>feature weights won’t matter</em>. This is because the
-individual SNF scheme calculates individual distance metrics for every
-input dataframe separately before fusing them together with SNF. Anytime
-a distance matrix is calculated, it’ll be for a single feature only, and
-the purpose of feature weighting (changing the relative contributions of
-input features during the distance matrix calculations) will be
-lost.</p>
+influence the feature weighting process: consider generating a data list
+where every single input data frame contains only 1 input feature. If
+that data list is processed exclusively using the “individual” SNF
+scheme in this set-up, <em>feature weights won’t matter</em>. This is
+because the individual SNF scheme calculates individual distance metrics
+for every input data frame separately before fusing them together with
+SNF. Anytime a distance matrix is calculated, it’ll be for a single
+feature only, and the purpose of feature weighting (changing the
+relative contributions of input features during the distance matrix
+calculations) will be lost.</p>
 </div>
 
 

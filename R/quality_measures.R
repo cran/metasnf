@@ -1,30 +1,60 @@
-#' Calculate silhouette scores
+#' Quality metrics
 #'
-#' Given a solutions_matrix and a list of similarity_matrices (or a single
-#'  similarity_matrix if the solutions_matrix has only 1 row), return a list
-#'  of 'silhouette' objects from the cluster package
+#' These functions calculate conventional metrics of cluster solution quality.
 #'
-#' @param solutions_matrix A solutions_matrix (see ?batch_snf)
-#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
+#' calculate_silhouettes: A wrapper for `cluster::silhouette` that calculates
+#' silhouette scores for all cluster solutions in a provided solutions data
+#' frame. Silhouette values range from -1 to +1 and indicate an overall ratio
+#' of how close together observations within a cluster are to how far apart
+#' observations across clusters are. You can learn more about interpreting
+#' the results of this function by calling `?cluster::silhouette`.
 #'
-#' @return silhouette_scores A list of "silhouette" objects from the cluster
-#'  package.
+#' calculate_dunn_indices: A wrapper for `clv::clv.Dunn` that calculates
+#' Dunn indices for all cluster solutions in a provided solutions data
+#' frame. Dunn indices, like silhouette scores, similarly reflect similarity
+#' within clusters and separation across clusters. You can learn more about
+#' interpreting the results of this function by calling `?clv::clv.Dunn`.
 #'
+#' calculate_db_indices: A wrapper for `clv::clv.Davies.Bouldin` that
+#' calculates Davies-Bouldin indices for all cluster solutions in a provided
+#' solutions data frame. These values can be interpreted similarly as those
+#' above. You can learn more about interpreting the results of this function by
+#' calling `?clv::clv.Davies.Bouldin`.
+#'
+#' @param sol_df A `solutions_df` class object created by `batch_snf()` with
+#'  the parameter `return_sim_mats = TRUE`.
+#' @return A list of `silhouette` class objects, a vector of Dunn indices, or a
+#'  vector of Davies-Bouldin indices depending on which function was used.
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 5)
+#' 
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' 
+#' # calculate Davies-Bouldin indices
+#' davies_bouldin_indices <- calculate_db_indices(sol_df)
+#' 
+#' # calculate Dunn indices
+#' dunn_indices <- calculate_dunn_indices(sol_df)
+#' 
+#' # calculate silhouette scores
+#' silhouette_scores <- calculate_silhouettes(sol_df)
+#' @name quality_measures
+NULL
+
+#' @rdname quality_measures
 #' @export
-calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
-    # The size of the solutions_matrix and the number of similarity_matrices
-    #  should match up. First, handle the special case of the user providing
-    #  a single similarity_matrix not bundled in a list.
-    if (inherits(similarity_matrices, "matrix")) {
-        similarity_matrices <- list(similarity_matrices)
-    }
-    # Then ensure the size of the two arguments align.
-    if (nrow(solutions_matrix) != length(similarity_matrices)) {
-        stop(
-            paste0(
-                "Size of solutions_matrix does not match length of",
-                " similarity_matrices."
-            )
+calculate_silhouettes <- function(sol_df) {
+    similarity_matrices <- sim_mats_list(sol_df)
+    if (all(sapply(similarity_matrices, is.null))) {
+        metasnf_error(
+            "Solutions data frame is missing similarity matrices attribute.",
+            " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -39,12 +69,12 @@ calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
                 return(dissimilarity_matrix)
             }
         )
-    # Dataframe that contains patients along the rows, solutions_matrix rows
+    # Dataframe that contains patients along the rows, sol_df rows
     #  along the columns, and which cluster the patient was assigned to in the
     #  values.
-    cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
+    cluster_solutions_df <- t(sol_df)
     # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the subjectkey
+    #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],
@@ -58,7 +88,7 @@ calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
             #  package in "Suggests". cluster::daisy is a default distance
             #  measure required for categorical and mixed data.
             silhouette_score <- cluster::silhouette(
-                x = cluster_solution,
+                x = as.integer(cluster_solution),
                 dmatrix = dissimilarity_matrix
             )
             return(silhouette_score)
@@ -69,39 +99,27 @@ calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
     return(silhouette_scores)
 }
 
-#' Calculate Dunn indices
-#'
-#' Given a solutions_matrix and a list of similarity_matrices (or a single
-#' similarity_matrix if the solutions_matrix has only 1 row), return vector of
-#' Dunn indices
-#'
-#' @param solutions_matrix A solutions_matrix (see ?batch_snf)
-#'
-#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
-#'
-#' @return dunn_indices A vector of Dunn indices for each cluster solution
-#'
+#' @rdname quality_measures
 #' @export
-calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
+calculate_dunn_indices <- function(sol_df) {
     if (!requireNamespace("clv", quietly = TRUE)) {
-        stop(
-            "Package \"clv\" must be installed to use this function.",
-            call. = FALSE
+        metasnf_error(
+            "Package \"clv\" must be installed to use this function."
         )
     }
-    # The size of the solutions_matrix and the number of similarity_matrices
-    #  should match up. First, handle the special case of the user providing
-    #  a single similarity_matrix not bundled in a list.
-    if (inherits(similarity_matrices, "matrix")) {
-        similarity_matrices <- list(similarity_matrices)
-    }
-    # Then ensure the size of the two arguments align.
-    if (nrow(solutions_matrix) != length(similarity_matrices)) {
-        stop(
-            paste0(
-                "Size of solutions_matrix does not match length of",
-                " similarity_matrices."
-            )
+    similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+    all_is_null <- lapply(
+        similarity_matrices,
+        function(x) {
+            is.null(x)
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (all_is_null) {
+        metasnf_error(
+            "Solutions data frame is missing similarity matrices attribute.",
+            " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -116,12 +134,12 @@ calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
                 return(dissimilarity_matrix)
             }
         )
-    # Dataframe that contains patients along the rows, solutions_matrix rows
+    # Dataframe that contains patients along the rows, sol_df rows
     #  along the columns, and which cluster the patient was assigned to in the
     #  values.
-    cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
+    cluster_solutions_df <- t(sol_df)
     # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the subjectkey
+    #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],
@@ -165,39 +183,27 @@ calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
     return(dunn_indices)
 }
 
-#' Calculate Davies-Bouldin indices
-#'
-#' Given a solutions_matrix and a list of similarity_matrices (or a single
-#' similarity_matrix if the solutions_matrix has only 1 row), return a vector of
-#' Davies-Bouldin indices
-#'
-#' @param solutions_matrix A solutions_matrix (see ?batch_snf)
-#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
-#'
-#' @return davies_bouldin_indices A vector of Davies-Bouldin indices for each
-#'  cluster solution.
-#'
+#' @rdname quality_measures
 #' @export
-calculate_db_indices <- function(solutions_matrix, similarity_matrices) {
+calculate_db_indices <- function(sol_df) {
     if (!requireNamespace("clv", quietly = TRUE)) {
-        stop(
-            "Package \"clv\" must be installed to use this function.",
-            call. = FALSE
+        metasnf_error(
+            "Package \"clv\" must be installed to use this function."
         )
     }
-    # The size of the solutions_matrix and the number of similarity_matrices
-    #  should match up. First, handle the special case of the user providing
-    #  a single similarity_matrix not bundled in a list.
-    if (inherits(similarity_matrices, "matrix")) {
-        similarity_matrices <- list(similarity_matrices)
-    }
-    # Then ensure the size of the two arguments align.
-    if (nrow(solutions_matrix) != length(similarity_matrices)) {
-        stop(
-            paste0(
-                "Size of solutions_matrix does not match length of",
-                " similarity_matrices."
-            )
+    similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+    all_is_null <- lapply(
+        similarity_matrices,
+        function(x) {
+            is.null(x)
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (all_is_null) {
+        metasnf_error(
+            "Solutions data frame is missing similarity matrices attribute.",
+            " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -212,12 +218,12 @@ calculate_db_indices <- function(solutions_matrix, similarity_matrices) {
                 return(dissimilarity_matrix)
             }
         )
-    # Dataframe that contains patients along the rows, solutions_matrix rows
+    # Dataframe that contains patients along the rows, sol_df rows
     #  along the columns, and which cluster the patient was assigned to in the
     #  values.
-    cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
+    cluster_solutions_df <- t(sol_df)
     # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the subjectkey
+    #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],

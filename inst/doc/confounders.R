@@ -8,8 +8,12 @@ knitr::opts_chunk$set(
     fig.align = "center"
 )
 
+## ----echo = FALSE-------------------------------------------------------------
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+
 ## -----------------------------------------------------------------------------
 library(metasnf)
+
 library(SNFtool)
 library(ggplot2)
 
@@ -93,9 +97,9 @@ player_data |>
 ## -----------------------------------------------------------------------------
 set.seed(42)
 
-metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
+metasnf_data <- dplyr::select(player_data, "id", "assists", "blocks")
 
-data_list <- generate_data_list(
+dl <- data_list(
     list(
         data = metasnf_data,
         name = "player_data",
@@ -105,34 +109,26 @@ data_list <- generate_data_list(
     uid = "id"
 )
 
-settings_matrix <- generate_settings_matrix(
-    data_list = data_list,
-    nrow = 1,
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 1,
     possible_snf_schemes = 1,
     k_values = 20,
     alpha_values = 0.8
 )
 
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+sol_df <- batch_snf(dl, sc)
 
-cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
-    dplyr::rename(
-        "id" = "subjectkey",
-        "cluster" = `1`
-    )
-
-head(cluster_solutions_df)
-
-cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
+cluster_solution_df <- t(sol_df)
 
 # matching the subject names
-metasnf_data$"id" <- paste0("subject_", metasnf_data$"id")
+metasnf_data$"uid" <- paste0("uid_", metasnf_data$"id")
 
 # merging back the original data
-metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solutions_df, by = "id")
+metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solution_df, by = "uid")
 
 metasnf_data |>
-    ggplot(aes(x = blocks, y = assists, colour = cluster)) +
+    ggplot(aes(x = blocks, y = assists, colour = s1)) +
     geom_point(size = 5, alpha = 0.3) +
     theme_bw()
 
@@ -168,7 +164,7 @@ player_data |>
 ## -----------------------------------------------------------------------------
 head(player_data)
 
-dl <- generate_data_list(
+dl <- data_list(
     list(
         data = player_data[, c("id", "blocks", "assists")],
         name = "player_data",
@@ -179,7 +175,7 @@ dl <- generate_data_list(
 )
 
 # Correction list for just the level
-unwanted_signal_list1 <- generate_data_list(
+unwanted_signal_list1 <- data_list(
     list(
         data = player_data[, c("id", "level")],
         name = "player_level",
@@ -190,7 +186,7 @@ unwanted_signal_list1 <- generate_data_list(
 )
 
 # Correction list for both player level and position
-unwanted_signal_list2 <- generate_data_list(
+unwanted_signal_list2 <- data_list(
     list(
         data = player_data[, c("id", "level", "position")],
         name = "player_level",
@@ -204,7 +200,7 @@ adjusted_dl <- linear_adjust(dl, unwanted_signal_list1)
 
 # Combine the data from the two data_lists the second list is being merged
 # only because it also has the position data, for plotting purposes
-merged_df <- collapse_dl(c(adjusted_dl, unwanted_signal_list2))
+merged_df <- as.data.frame(c(adjusted_dl, unwanted_signal_list2))
 
 merged_df |>
     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
@@ -214,7 +210,7 @@ merged_df |>
 # Correcting too many things!
 adjusted_dl2 <- linear_adjust(dl, unwanted_signal_list2)
 
-merged_df2 <- collapse_dl(c(adjusted_dl2, unwanted_signal_list2))
+merged_df2 <- as.data.frame(c(adjusted_dl2, unwanted_signal_list2))
 
 merged_df2 |>
     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +

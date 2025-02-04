@@ -2,23 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{add_columns}
 \alias{add_columns}
-\title{Add columns to a dataframe}
+\title{Add columns to a data frame}
 \usage{
-add_columns(df, newcols, fill = NA)
+add_columns(df, cols, value = NA)
 }
 \arguments{
-\item{df}{The dataframe to extend}
+\item{df}{The data frame to extend.}
 
-\item{newcols}{The vector containing new column names}
+\item{cols}{The vector containing new column names.}
 
-\item{fill}{The values of the elements of the newly added columns. NA by
-default.}
+\item{value}{The values stored in the newly added columns. NA by default.}
 }
 \value{
-extended_df The dataframe containing the added columns
+A data frame containing with the same columns as the \code{df} argument
+as well as the new columns specified in the \code{cols} argument.
 }
 \description{
-Add new columns to a dataframe by providing a character vector of column
-names (param \code{newcols}) and a value to occupy each row of the new columns
-(param \code{fill}, NA by default).
+Add new columns to a data frame by specifying their names and a value to
+initialize them with.
 }
+\keyword{internal}

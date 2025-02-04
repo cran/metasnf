@@ -4,170 +4,97 @@ knitr::opts_chunk$set(
     comment = "#>"
 )
 
+## ----echo = FALSE-------------------------------------------------------------
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+
 ## -----------------------------------------------------------------------------
 library(metasnf)
 
-distance_metrics_list <- generate_distance_metrics_list()
-
-## -----------------------------------------------------------------------------
-summarize_dml(distance_metrics_list)
-
-## -----------------------------------------------------------------------------
-my_distance_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
-    ),
-    discrete_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
-    )
+dl <- data_list(
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
-summarize_dml(my_distance_metrics)
-
-## -----------------------------------------------------------------------------
-library(SNFtool)
-
-data(Data1)
-data(Data2)
-
-Data1$"patient_id" <- 101:(nrow(Data1) + 100) # nolint
-Data2$"patient_id" <- 101:(nrow(Data2) + 100) # nolint
-
-data_list <- generate_data_list(
-    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
-    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
-    uid = "patient_id"
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5
 )
 
+sc$"dist_fns_list"
+
 ## -----------------------------------------------------------------------------
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 10,
-    distance_metrics_list = my_distance_metrics
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 10,
+    cnt_dist_fns = list("standard_norm_euclidean" = sn_euclidean_distance),
+    dsc_dist_fns = list("standard_norm_euclidean" = sn_euclidean_distance),
+    use_default_dist_fns = TRUE
 )
 
-# showing just the columns that are related to distances
-settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+sc
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  solutions_matrix <- batch_snf(
-#      data_list,
-#      settings_matrix,
-#      distance_metrics_list = my_distance_metrics
-#  )
+# sol_df <- batch_snf(dl, sc)
 
 ## -----------------------------------------------------------------------------
-no_default_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
-    ),
-    discrete_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
-    ),
-    ordinal_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
-    ),
-    categorical_distances = list(
-        "standard_norm_euclidean" = gower_distance
-    ),
-    mixed_distances = list(
-        "standard_norm_euclidean" = gower_distance
-    ),
-    keep_defaults = FALSE
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 10,
+    cnt_dist_fns = list("standard_norm_euclidean" = sn_euclidean_distance),
+    dsc_dist_fns = list("standard_norm_euclidean" = sn_euclidean_distance),
+    ord_dist_fns = list("standard_norm_euclidean" = sn_euclidean_distance),
+    mix_dist_fns = list("standard_norm_euclidean" = gower_distance),
+    use_default_dist_fns = FALSE
 )
 
-summarize_dml(no_default_metrics)
+sc
 
 ## -----------------------------------------------------------------------------
-my_distance_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 10,
+    cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
     ),
-    discrete_distances = list(
+    dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
-    )
-)
-
-summarize_dml(my_distance_metrics)
-
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 10,
-    distance_metrics_list = my_distance_metrics,
+    ),
+    use_default_dist_fns = TRUE,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
 
-settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+sc
 
 ## -----------------------------------------------------------------------------
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 10,
-    distance_metrics_list = my_distance_metrics,
-    continuous_distances = 1,
-    discrete_distances = c(2, 3)
-)
-
-settings_matrix <- add_settings_matrix_rows(
-    settings_matrix,
-    nrow = 10,
-    distance_metrics_list = my_distance_metrics,
-    continuous_distances = 3,
-    discrete_distances = 1
-)
-
-settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
-
-## -----------------------------------------------------------------------------
-weights_matrix <- generate_weights_matrix(
-    data_list
-)
-
-weights_matrix
-
-## -----------------------------------------------------------------------------
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 10,
-    distance_metrics_list = my_distance_metrics,
-    continuous_distances = 1,
-    discrete_distances = c(2, 3)
-)
-
-weights_matrix <- generate_weights_matrix(
-    data_list,
-    nrow = nrow(settings_matrix)
-)
-
-weights_matrix[1:5, ]
-
-solutions_matrix_1 <- batch_snf(
-    data_list,
-    settings_matrix,
-    distance_metrics_list = my_distance_metrics,
-    weights_matrix = weights_matrix
-)
-
-solutions_matrix_2 <- batch_snf(
-    data_list,
-    settings_matrix,
-    distance_metrics_list = my_distance_metrics
-)
-
-identical(
-    solutions_matrix_1,
-    solutions_matrix_2
-) # Try this on your machine - It'll evaluate to TRUE
+sc$"weights_matrix"
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  weights_matrix <- generate_weights_matrix(
-#      data_list,
-#      nrow = nrow(settings_matrix),
-#      fill = "uniform" # or fill = "exponential"
-#  )
+# # random weights:
+# sc <- snf_config(
+#     dl = dl,
+#     n_solutions = 10,
+#     weights_fill = "uniform" # or fill = "exponential"
+# )
+# 
+# sc
+# 
+# # custom weights
+# fts <- features(dl)
+# custom_wm <- matrix(nrow = 10, ncol = length(fts), rnorm(10 * length(fts))^2)
+# colnames(custom_wm) <- fts
+# custom_wm <- as_weights_matrix(custom_wm)
+# 
+# sc <- snf_config(
+#     dl = dl,
+#     n_solutions = 10,
+#     wm = custom_wm
+# )
+# 
+# sc
 
 ## -----------------------------------------------------------------------------
 euclidean_distance
@@ -178,8 +105,8 @@ head(anxiety)
 ## -----------------------------------------------------------------------------
 processed_anxiety <- anxiety |>
     na.omit() |> # no NAs
-    dplyr::rename("subjectkey" = "unique_id") |>
-    data.frame(row.names = "subjectkey")
+    dplyr::rename("uid" = "unique_id") |>
+    data.frame(row.names = "uid")
 
 head(processed_anxiety)
 
@@ -197,9 +124,14 @@ my_scaled_euclidean <- function(df, weights_row) {
 my_scaled_euclidean(processed_anxiety)[1:5, 1:5]
 
 ## -----------------------------------------------------------------------------
-my_distance_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
+sc <- snf_config(
+    n_solutions = 10,
+    dl = dl,
+    cnt_dist_fns = list(
         "my_scaled_euclidean" = my_scaled_euclidean
-    )
+    ),
+    use_default_dist_fns = TRUE
 )
+
+sc
 

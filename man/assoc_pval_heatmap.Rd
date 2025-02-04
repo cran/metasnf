@@ -17,7 +17,7 @@ assoc_pval_heatmap(
   annotation_colours = NULL,
   labels_colour = NULL,
   split_by_domain = FALSE,
-  data_list = NULL,
+  dl = NULL,
   significance_stars = TRUE,
   slice_font_size = 8,
   ...
@@ -57,12 +57,12 @@ colours.}
 \item{labels_colour}{Vector of colours to use for the columns and rows
 of the heatmap.}
 
-\item{split_by_domain}{The results of \code{dl_var_summar} - a dataframe that has
+\item{split_by_domain}{The results of \code{dl_var_summar} - a data frame that has
 the domain of every feature in the plotted data.
 columns of the correlation_matrix. Will be used to "slice" the heatmap into
 visually separated sections.}
 
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{significance_stars}{If TRUE (default), plots significance stars on
 heatmap cells}
@@ -78,4 +78,17 @@ correlation_matrix.
 }
 \description{
 Heatmap of pairwise associations between features
+}
+\examples{
+#data_list <- data_list(
+#    list(income, "household_income", "demographics", "ordinal"),
+#    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#    list(anxiety, "anxiety", "behaviour", "ordinal"),
+#    list(depress, "depressed", "behaviour", "ordinal"),
+#    uid = "unique_id"
+#)
+#
+#assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+#ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
 }

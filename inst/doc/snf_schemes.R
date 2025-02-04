@@ -8,3 +8,6 @@ knitr::opts_chunk$set(
   fig.align = "center"
 )
 
+## ----echo = FALSE-------------------------------------------------------------
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+

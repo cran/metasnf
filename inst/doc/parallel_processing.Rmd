@@ -4,7 +4,7 @@ output:
     rmarkdown::html_vignette:
         toc: true
 description: >
-  Leverage parallel processing to speed up the metasnf pipeline.
+  Leverage parallel processing to speed up the `metasnf` pipeline.
 vignette: >
   %\VignetteIndexEntry{Parallel Processing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -26,9 +26,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [parallel_processing.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_processing.Rmd)
 
-metasnf can use [future apply](https://future.apply.futureverse.org/) to run the rows of a settings matrix in parallel.
+metasnf can use [future apply](https://future.apply.futureverse.org/) to run the rows of a settings data frame in parallel.
 
 Parallel processing has some overhead cost, so it's possible that your particular situation won't greatly benefit (or may even run slower) with parallel processing enabled.
 
@@ -41,7 +45,7 @@ However, if you have access to multiple cores and each integration you are runni
 library(metasnf)
 
 # Setting up the data
-data_list <- generate_data_list(
+dl <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -50,17 +54,17 @@ data_list <- generate_data_list(
     uid = "unique_id"
 )
 
-# Specifying 5 different sets of settings for SNF
+# Specifying 10 different sets of settings for SNF
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 10,
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 10,
     max_k = 40
 )
 
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_matrix,
+sol_df <- batch_snf(
+    dl,
+    sc,
     processes = "max" # Can also be a specific integer
 )
 ```
@@ -71,9 +75,9 @@ Use the progressr package to visualize the progress of parallel batch_snf.
 
 ```{r eval = FALSE}
 progressr::with_progress({
-    solutions_matrix <- batch_snf(
-        data_list,
-        settings_matrix,
+    sol_df <- batch_snf(
+        dl,
+        sc,
         processes = "max"
     )
 })
@@ -86,17 +90,15 @@ Setting processes to "max" will make use of as many cores as R can find.
 If you want to dial things back a little, you can specify more precisely the number of processes you want:
 
 ```{r eval = FALSE}
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_matrix,
+sol_df <- batch_snf(
+    dl,
+    sc,
     processes = 4
 )
 ```
 
-To find out how many processes you have access to (or at least, how many metasnf will think you have access to), use the `availableCores()` function from the future package:
+To find out how many processes you have access to (or at least, how many `metasnf` will think you have access to), use the `availableCores()` function from the future package:
 
 ```{r eval = FALSE}
-library(future)
-
-availableCores()
+future::availableCores()
 ```
