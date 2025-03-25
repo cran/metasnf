@@ -31,7 +31,7 @@ options(crayon.enabled = FALSE, cli.num_colors = 0)
 ## ----eval = FALSE-------------------------------------------------------------
 # my_dl_subsamples <- subsample_dl(
 #     my_dl,
-#     n_subsamples = 100,
+#     n_subsamples = 50,
 #     subsample_fraction = 0.85
 # )
 

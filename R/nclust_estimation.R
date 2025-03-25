@@ -38,29 +38,59 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     # SNFtool::estimateClustersGivenGraph. The scaling reduces the risk of
     # generating zero-valued eigenvectors as a result of floating point
     # errors.
-    L <- Di %*% L %*% Di * 1e7
-    ###########################################################################
-    # compute the eigenvectors corresponding to the k smallest
-    eigs <- eigen(L)
-    eigs_order <- sort(eigs$values, index.return=T)$ix
-    eigs$values <- eigs$values[eigs_order]
-    eigs$values <- eigs$values / 1e7
+    scaling_factor <- 1e6
+    success <- FALSE
+    while (!success) {
+        scaling_factor <- scaling_factor * 10
+        result <- tryCatch(
+            {
+                L <- Di %*% L %*% Di * scaling_factor
+                eigs <- eigen(L)
+                eigs_order <- sort(eigs$values, index.return=T)$ix
+                eigs$values <- eigs$values[eigs_order]
+                eigs$values <- eigs$values / scaling_factor
+                list(
+                    "L" = L,
+                    "eigs" = eigs,
+                    "eigs_order" = eigs_order,
+                    "success" = TRUE
+                )
+            }, error = function(e) {
+                list(
+                    "success" = FALSE
+                )
+            }
+        )
+        success <- result$"success"
+    }
+    L <- result$"L"
+    eigs <- result$"eigs"
+    eigs_order <- result$"eigs_order"
     eigs$vectors <- eigs$vectors[, eigs_order]
     eigengap <- abs(diff(eigs$values))
     quality <- list()
     for (c_index in 1:length(NUMC)) {
-        ck <- NUMC[c_index]
-        UU <- eigs$vectors[, 1:ck]
-        EigenvectorsDiscrete <- discretisation(UU)
-        EigenVectors <- EigenvectorsDiscrete^2
-        #MATLAB: sort(EigenVectors,2, 'descend');
-        temp1 <- EigenVectors[do.call(order, lapply(1:ncol(EigenVectors),
-             function(i) EigenVectors[, i])), ]
-        temp1 <- t(apply(temp1, 1, sort, TRUE))
-        quality[[c_index]] <- (1 - eigs$values[ck + 1]) /
-            (1 - eigs$values[ck]) *
-            sum( sum( diag(1 / (temp1[, 1] + .Machine$double.eps) ) %*%
-            temp1[, 1:max(2, ck-1)] ))
+        quality <- tryCatch(
+            {
+                ck <- NUMC[c_index]
+                UU <- eigs$vectors[, 1:ck]
+                EigenvectorsDiscrete <- discretisation(UU)
+                EigenVectors <- EigenvectorsDiscrete^2
+                #MATLAB: sort(EigenVectors,2, 'descend');
+                temp1 <- EigenVectors[do.call(order, lapply(1:ncol(EigenVectors),
+                     function(i) EigenVectors[, i])), ]
+                temp1 <- t(apply(temp1, 1, sort, TRUE))
+                quality[[c_index]] <- (1 - eigs$values[ck + 1]) /
+                    (1 - eigs$values[ck]) *
+                    sum( sum( diag(1 / (temp1[, 1] + .Machine$double.eps) ) %*%
+                    temp1[, 1:max(2, ck-1)] ))
+                quality
+            }, error = function(e) {
+                # Ignore this particular NUMC value if the above crashes
+                quality[[c_index]] <- Inf
+                quality
+            }
+        )
     }
     #Eigen-gap best two clusters
     t1 <- sort(eigengap[NUMC], decreasing=TRUE, index.return=T)$ix

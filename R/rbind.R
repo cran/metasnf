@@ -5,7 +5,7 @@
 #' @param ... An arbitrary number of `solutions_df` class objects.
 #' @return A `solutions_df` class object.
 #' @export
-rbind.solutions_df <- function(reset_indices = FALSE, ...) {
+rbind.solutions_df <- function(..., reset_indices = FALSE) {
     args <- list(...)   
     all_sol_dfs <- lapply(
         args,
@@ -30,7 +30,9 @@ rbind.solutions_df <- function(reset_indices = FALSE, ...) {
     wms <- lapply(
         args,
         function(x) {
-            attributes(x)$"snf_config"$"weights_matrix"
+            as.matrix(
+                attributes(x)$"snf_config"$"weights_matrix"
+            )
         }
     )
     smls <- lapply(
@@ -41,7 +43,7 @@ rbind.solutions_df <- function(reset_indices = FALSE, ...) {
     )
     result <- rbind.data.frame(...)
     merged_sdf <- do.call(rbind, sdfs)
-    merged_wm <- do.call(rbind, wms)
+    merged_wm <- as_weights_matrix(do.call(rbind, wms))
     merged_sml <- do.call(c, smls)
     if (reset_indices) {
         result$"solution" <- seq_len(nrow(result))
@@ -60,7 +62,7 @@ rbind.solutions_df <- function(reset_indices = FALSE, ...) {
 #' @param ... An arbitrary number of `ext_solutions_df` class objects.
 #' @return An `ext_solutions_df` class object.
 #' @export
-rbind.ext_solutions_df <- function(reset_indices = FALSE, ...) {
+rbind.ext_solutions_df <- function(..., reset_indices = FALSE) {
     args <- list(...)   
     all_sol_dfs <- lapply(
         args,
@@ -85,7 +87,9 @@ rbind.ext_solutions_df <- function(reset_indices = FALSE, ...) {
     wms <- lapply(
         args,
         function(x) {
-            attributes(x)$"snf_config"$"weights_matrix"
+            as.matrix(
+                attributes(x)$"snf_config"$"weights_matrix"
+            )
         }
     )
     smls <- lapply(
@@ -96,7 +100,7 @@ rbind.ext_solutions_df <- function(reset_indices = FALSE, ...) {
     )
     result <- rbind.data.frame(...)
     merged_sdf <- do.call(rbind, sdfs)
-    merged_wm <- do.call(rbind, wms)
+    merged_wm <- as_weights_matrix(do.call(rbind, wms))
     merged_sml <- do.call(c, smls)
     if (reset_indices) {
         result$"solution" <- seq_len(nrow(result))

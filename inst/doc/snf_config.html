@@ -612,7 +612,7 @@ combination of the former 4).</p>
 ##     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = &quot;euclidean&quot;))
 ##     return(distance_matrix)
 ## }
-## &lt;bytecode: 0x56265ea3bc58&gt;
+## &lt;bytecode: 0x557af56ca098&gt;
 ## &lt;environment: namespace:metasnf&gt;</code></pre>
 <p>You can learn more about customizing distance metrics in the <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
 metrics vignette</a>.</p>
@@ -639,7 +639,7 @@ capable of converting a similarity matrix into a cluster solution
 ##         nclust_estimate)
 ##     return(solution)
 ## }
-## &lt;bytecode: 0x56265df73ac0&gt;
+## &lt;bytecode: 0x557af90129b8&gt;
 ## &lt;environment: namespace:metasnf&gt;</code></pre>
 <p>You can learn more about customizing clustering functions in the <a href="https://branchlab.github.io/metasnf/articles/clustering_algorithms.html">clustering
 algorithnms vignette</a>.</p>
@@ -674,12 +674,12 @@ occurs.</p>
 <div id="customizing-an-snf-config" class="section level2">
 <h2>Customizing an SNF config</h2>
 <p>When not specifying any parameters beyond the number of rows that are
-created, the function will randomly vary the values in the matrix.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># Through minimums and maximums</span></span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>    dl,</span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">100</span></span>
-<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>)</span></code></pre></div>
+created, the function will randomly vary most configurable values in the
+config within sensible default ranges.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">snf_config</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>    dl,</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>    <span class="at">n_solutions =</span> <span class="dv">100</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## ℹ No distance functions specified. Using defaults.</code></pre>
 <pre><code>## ℹ No clustering functions specified. Using defaults.</code></pre>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>sc</span></code></pre></div>

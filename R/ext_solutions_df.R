@@ -71,6 +71,11 @@ validate_ext_solutions_df <- function(ext_sol_dfl) {
             "`ext_solutions_df` must have at least one observation (uid) column."
         )
     }
+    if (nrow(ext_sol_dfl) == 0) {
+        metasnf_error(
+            "`ext_solutions_df` must have at least one row."
+        )
+    }
     return(ext_sol_dfl)
 }
 
@@ -81,7 +86,11 @@ validate_ext_solutions_df <- function(ext_sol_dfl) {
 #' @return An `ext_solutions_df` object, which is a data frame with class
 #'  `ext_solutions_df`.
 new_ext_solutions_df <- function(ext_sol_dfl) {
-    ext_sol_df <- structure(ext_sol_dfl, class = c("ext_solutions_df", "data.frame"))    
+    pval_cols <- colnames(ext_sol_dfl)[grep("_pval$", colnames(ext_sol_dfl))]
+    feature_cols <- setdiff(pval_cols, c("min_pval", "mean_pval", "max_pval"))
+    fts <- gsub("_pval", "", feature_cols)
+    attr(ext_sol_dfl, "features") <- fts
+    ext_sol_df <- structure(ext_sol_dfl, class = c("ext_solutions_df", "data.frame"))
     return(ext_sol_df)
 }
 
@@ -157,13 +166,12 @@ extend_solutions <- function(sol_df,
     }
     ###########################################################################
     # Calculate vector of all feature names
-    ###########################################################################
-    fts <- as.character(unlist(sapply(dl, function(x) colnames(x$"data")[-1])))
+    fts <- features(dl)
     n_fts <- length(fts)
     ###########################################################################
     # Calculate vector of all feature types
     ###########################################################################
-    feature_types <- sapply(dl, function(x) rep(x$"type", n_fts))
+    feature_types <- summary(dl, "feature")$"type"
     ###########################################################################
     # Construct base of extended solutions data frame by adding columns for
     # p-values of all fts

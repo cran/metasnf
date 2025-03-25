@@ -1,3 +1,77 @@
+# metasnf 2.0.6
+
+## Bug fixes
+
+- fixed `rbind` for classes `solutions_df` and `ext_solutions_df` not preserving the class type of the contained `weights_matrix`
+
+## Print formatting
+
+- printing `solutions_df` or `ext_solutions_df` restricts output to 10 line max by default
+
+## Other
+
+- update for CRAN resubmission
+
+# metasnf 2.0.5
+
+## Bug fixes
+- calc_aris (as of v2, v1 is still fine) incorrectly excluded the first observation from ARI calculations.
+- merge.data_list wasn't properly integrating updated parameter names
+- prevent solutions_df and ext_solutions_df from having 0 rows
+- use `solution` column in `mc_manhattan_plot()` when extended solutions data frame has no MC labels
+
+## Code formatting
+
+- print.solutions_df title was set as print method for `weights matrix`
+- replace dl_1/dl_2 with x&y for consistency in `merge.data_list()`
+
+## New functions
+
+- added `as.list()` for `dist_fns_list`, `clust_fns_list`, and `data_list` objects
+
+## Performance improvements
+
+- convert weights matrix to a regular matrix prior to printing reduces print time
+- same as last commit
+- weights matrix rbinding is faster when treated as a matrix
+
+## Print formatting
+
+- deprecated message on `generate_settings_matrix` needed paste0
+- solutions data frame printing above 10 rows will default to 10 rows
+- `print.solutions_df()` misprinted the number of observations in the solutions data frame
+
+# metasnf 2.0.4
+
+## OOP
+
+- `merge_dls()` is superseded by `merge.data_lists()`
+
+## Bug fixes
+
+- `ext_solutions_df` manipulation won't drop `summary_features` and `features` attributes
+- `estimate_nclust_given_graph` has more resiliency to floating point errors through tryCatch statement during eigengap quality assignment
+
+# metasnf 2.0.3
+
+- bugfix: `estimate_nclust_given_graph` has more resiliency to floating point errors through tryCatch loop updating eigenvalue scaling
+- added functions: added `dplyr_row_slice()` functions for classes `solutions_df` and `ext_solutions_df`
+
+# metasnf 2.0.2
+
+## Formatting
+
+- removed debugging dash lines from `extend_solutions()`
+
+# metasnf 2.0.1
+
+## Bug fixes
+
+- `extend_solutions` was not assigning feature types properly during p-value calculations
+- `rbind.ext_solutions_df` now takes `...` parameter before `reset_indices` parameter to avoid error during calls with unnamed parameters.
+- `rbind.solutions_df` now takes `...` parameter before `reset_indices` parameter to avoid error during call without named parameters.
+-  slicing `snf_config` object made weights matrix lose its class
+
 # metasnf 2.0.0
 
 ## Breaking changes

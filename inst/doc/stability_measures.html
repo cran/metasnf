@@ -377,12 +377,13 @@ build subsamples of the data list using the <code>subsample_dl</code>
 function.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>my_dl_subsamples <span class="ot">&lt;-</span> <span class="fu">subsample_dl</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>    my_dl,</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>    <span class="at">n_subsamples =</span> <span class="dv">100</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>    <span class="at">n_subsamples =</span> <span class="dv">50</span>,</span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="at">subsample_fraction =</span> <span class="fl">0.85</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span></code></pre></div>
-<p><code>my_dl_subsamples</code> contains a list of 100 subsamples of
-the full data list. Each variation only has a random 85% of the original
-observations.</p>
+<p><code>my_dl_subsamples</code> contains a list of 50 subsamples of the
+full data list. Each variation only has a random 85% of the original
+observations. Once the subsamples of the data list have been created, a
+cluster solution must be</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>batch_subsample_results <span class="ot">&lt;-</span> <span class="fu">batch_snf_subsamples</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    my_dl_subsamples,</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    sc,</span>

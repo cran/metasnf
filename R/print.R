@@ -246,6 +246,7 @@ print.clust_fns_list <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.weights_matrix <- function(x, ...) {
+    class(x) <- c("matrix", "array")
     all_output <- x |>
         data.frame() |>
         dplyr::glimpse() |>
@@ -274,7 +275,7 @@ print.weights_matrix <- function(x, ...) {
     }
 }
 
-#' Print method for class `weights_matrix`
+#' Print method for class `solutions_df`
 #'
 #' Custom formatted print for weights matrices that outputs
 #' information about feature weights functions to the console.
@@ -292,9 +293,12 @@ print.solutions_df <- function(x, n = NULL, tips = TRUE, ...) {
         } else {
             segment <- " cluster solutions of "
         }
-        cat(cli::col_grey(nrow(x), segment, ncol(x) - 2, " observations:\n"))
+        cat(cli::col_grey(nrow(x), segment, length(uids(x)), " observations:\n"))
     }
     assignment_df <- tibble::tibble(as.data.frame(x))
+    if (nrow(assignment_df) > 10 & is.null(n)) {
+        n <- 10
+    }
     output <- utils::capture.output(print(assignment_df, n = n))
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
@@ -454,6 +458,9 @@ print.t_ext_solutions_df <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.ext_solutions_df <- function(x, n = NULL, ...) {
+    if (nrow(x) > 10 & is.null(n)) {
+        n <- 10
+    }
     cat(
         cli::col_grey(
             nrow(x), " cluster solutions, ", length(uids(x)), " observations,",

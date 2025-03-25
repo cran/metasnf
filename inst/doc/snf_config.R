@@ -54,7 +54,6 @@ class(wm) <- "matrix"
 wm[1:5, 1:5]
 
 ## -----------------------------------------------------------------------------
-# Through minimums and maximums
 sc <- snf_config(
     dl,
     n_solutions = 100
