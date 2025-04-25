@@ -38,8 +38,9 @@ An alluvial plot (class "gg" and "ggplot") showing distribution of
 a feature across varying number cluster solutions.
 }
 \description{
-This alluvial plot shows how observations in a similarity matrix could
-have been clustered over a set of clustering functions.
+This function creates an alluvial plot that shows how observations in
+a similarity matrix could have been clustered over a set of clustering
+functions.
 }
 \examples{
 input_dl <- data_list(
@@ -60,9 +61,9 @@ alluvial_cluster_plot(
     cluster_sequence = clust_fn_sequence,
     similarity_matrix = sim_mats[[1]],
     dl = input_dl,
-    key_outcome = "gender", # the name of the feature of interest
-    key_label = "Gender", # how the feature of interest should be displayed
-    extra_outcomes = "diagnosis", # more features to plot but not colour by
+    key_outcome = "gender",
+    key_label = "Gender",
+    extra_outcomes = "diagnosis",
     title = "Gender Across Cluster Counts"
 )
 }

@@ -2,15 +2,14 @@
 % Please edit documentation in R/coclustering.R
 \name{batch_snf_subsamples}
 \alias{batch_snf_subsamples}
-\title{Run SNF clustering pipeline on a list of subsampled data lists.}
+\title{Run SNF clustering pipeline on a list of subsampled data lists}
 \usage{
 batch_snf_subsamples(
   dl_subsamples,
   sc,
   processes = 1,
   return_sim_mats = FALSE,
-  sim_mats_dir = NULL,
-  verbose = TRUE
+  sim_mats_dir = NULL
 )
 }
 \arguments{
@@ -42,8 +41,6 @@ of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{sim_mats_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}
-
-\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 By default, returns a one-element list: \code{cluster_solutions}, which
@@ -56,27 +53,28 @@ those cluster solutions, should you require these objects for your own
 stability calculations.
 }
 \description{
-Run SNF clustering pipeline on a list of subsampled data lists.
+Run SNF clustering pipeline on a list of subsampled data lists
 }
 \examples{
-# my_dl <- data_list(
-#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#     list(income, "household_income", "demographics", "continuous"),
-#     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#     uid = "unique_id"
-# )
-# 
-# sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-# 
-# my_dl_subsamples <- subsample_dl(
-#     my_dl,
-#     n_subsamples = 20,
-#     subsample_fraction = 0.85
-# )
-# 
-# batch_subsample_results <- batch_snf_subsamples(
-#     my_dl_subsamples,
-#     sc,
-#     verbose = TRUE
-# )
+\donttest{
+my_dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+
+my_dl_subsamples <- subsample_dl(
+    my_dl,
+    n_subsamples = 20,
+    subsample_fraction = 0.85
+)
+
+batch_subsample_results <- batch_snf_subsamples(
+    my_dl_subsamples,
+    sc
+)
+}
 }

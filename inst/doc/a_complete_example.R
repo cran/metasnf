@@ -129,8 +129,13 @@ head(as.data.frame(my_sc$"settings_df"))
 ## -----------------------------------------------------------------------------
 names(my_sc)
 
-## -----------------------------------------------------------------------------
-sol_df <- batch_snf(input_dl, my_sc)
+## ----eval = FALSE-------------------------------------------------------------
+# sol_df <- batch_snf(input_dl, my_sc)
+# 
+# sol_df
+
+## ----echo = FALSE-------------------------------------------------------------
+sol_df <- cache_a_complete_example_sol_df
 
 sol_df
 
@@ -210,22 +215,17 @@ mc_sol_df
 #     res = 100
 # )
 
-## -----------------------------------------------------------------------------
-# Only looking at our out-of-model p-values
-ext_sol_df <- extend_solutions(
-    mc_sol_df,
-    target_dl = target_dl
-)
+## ----eval = FALSE-------------------------------------------------------------
+# ext_sol_df <- extend_solutions(
+#     mc_sol_df,
+#     dl = input_dl,
+#     target_dl = target_dl
+# )
+# 
+# ext_sol_df
 
-ext_sol_df
-
-# Re-running to calculate the p-value for every single input and out-of-model
-# feature:
-ext_sol_df <- extend_solutions(
-    mc_sol_df,
-    dl = input_dl,
-    target_dl = target_dl
-)
+## ----echo = FALSE-------------------------------------------------------------
+ext_sol_df <- cache_a_complete_example_ext_sol_df
 
 ext_sol_df
 
@@ -385,7 +385,7 @@ ext_sol_df
 
 ## ----eval = FALSE-------------------------------------------------------------
 # config_hm <- config_heatmap(
-#     sc = my_sc,
+#     my_sc,
 #     order = meta_cluster_order,
 #     hide_fixed = TRUE
 # )
@@ -447,8 +447,8 @@ ext_sol_df
 # 
 # annotated_ari_hm3
 
-## -----------------------------------------------------------------------------
-sol_df <- batch_snf(dl = input_dl, sc = my_sc, return_sim_mats = TRUE)
+## ----eval = FALSE-------------------------------------------------------------
+# sol_df <- batch_snf(dl = input_dl, sc = my_sc, return_sim_mats = TRUE)
 
 ## ----eval = FALSE-------------------------------------------------------------
 # silhouette_scores <- calculate_silhouettes(sol_df)
@@ -472,7 +472,7 @@ ext_sol_df <- extend_solutions(sol_df, target_dl)
 #     res = 100
 # )
 
-## -----------------------------------------------------------------------------
+## ----eval---------------------------------------------------------------------
 # All the observations present in all data frames with no NAs
 all_observations <- uids(input_dl)
 
@@ -533,25 +533,30 @@ train_target_dl <- data_list(
     uid = "unique_id"
 )
 
-# Find a clustering solution in your training data
-set.seed(42)
-my_sc <- snf_config(
-    train_dl,
-    n_solutions = 5,
-    min_k = 10,
-    max_k = 30
-)
+## ----eval = FALSE-------------------------------------------------------------
+# # Find a clustering solution in your training data
+# set.seed(42)
+# my_sc <- snf_config(
+#     train_dl,
+#     n_solutions = 5,
+#     min_k = 10,
+#     max_k = 30
+# )
+# 
+# train_sol_df <- batch_snf(
+#     train_dl,
+#     my_sc
+# )
+# 
+# ext_sol_df <- extend_solutions(
+#     train_sol_df,
+#     train_target_dl
+# )
 
-train_sol_df <- batch_snf(
-    train_dl,
-    my_sc
-)
+## ----echo = FALSE-------------------------------------------------------------
+ext_sol_df <- cache_a_complete_example_lp_ext_sol_df
 
-ext_sol_df <- extend_solutions(
-    train_sol_df,
-    train_target_dl
-)
-
+## -----------------------------------------------------------------------------
 # The first row had the lowest minimum p-value across our outcomes
 lowest_min_pval <- min(ext_sol_df$"min_pval")
 which(ext_sol_df$"min_pval" == lowest_min_pval)
@@ -566,12 +571,9 @@ propagated_labels <- label_propagate(top_row, full_dl)
 head(propagated_labels)
 tail(propagated_labels)
 
-## -----------------------------------------------------------------------------
-propagated_labels_all <- label_propagate(
-    ext_sol_df,
-    full_dl
-)
-
-head(propagated_labels_all)
-tail(propagated_labels_all)
+## ----eval = FALSE-------------------------------------------------------------
+# propagated_labels_all <- label_propagate(
+#     ext_sol_df,
+#     full_dl
+# )
 

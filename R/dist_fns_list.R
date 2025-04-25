@@ -178,11 +178,11 @@ check_dfll_item_names <- function(dfll) {
     }
 }
 
-#' Check if subitems of a distance metrics list-like object are functions
+#' Check if items of a distance metrics list-like object are functions
 #'
 #' @keywords internal
 #' @inheritParams validate_dist_fns_list
-#' @return Doesn't return any value. Raises error if the subitems of dfll are
+#' @return Doesn't return any value. Raises error if the items of dfll are
 #'  not functions.
 check_dfll_subitems_are_fns <- function(dfll) {
     subitems_are_fns <- lapply(
@@ -282,17 +282,6 @@ check_dfll_fn_names <- function(dfll) {
     if (!fns_have_names) {
         metasnf_error("Please specify a name for every supplied function.")
     }
-}
-
-#' Summarize metrics contained in a dist_fns_list
-#'
-#' @param dist_fns_list A dist_fns_list.
-#' @return "data.frame"-class object summarizing items in a distance metrics
-#'  list.
-#' @export
-summarize_dfl <- function(dist_fns_list) {
-    dfl_summary <- lapply(dist_fns_list, names)
-    return(dfl_summary)
 }
 
 #' Built-in distance functions

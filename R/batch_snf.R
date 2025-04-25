@@ -1,4 +1,4 @@
-#' Run variations of SNF.
+#' Run variations of SNF
 #'
 #' This is the core function of the `metasnf` package. Using the information
 #' stored in a settings_df (see ?settings_df) and a data list
@@ -50,8 +50,8 @@
 #' sol_df <- batch_snf(input_dl, sc)
 #'
 #' # A solutions data frame with similarity matrices:
-#' # sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-#' # sim_mats_list(sol_df)
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' sim_mats_list(sol_df)
 batch_snf <- function(dl,
                       sc,
                       processes = 1,
@@ -115,6 +115,15 @@ batch_snf <- function(dl,
 #'  is NULL if return_sim_mats is FALSE.
 run_snf <- function(i, dl, sc, return_sim_mats, sim_mats_dir, p) {
     sdf_row <- sc[["settings_df"]][i, ]
+    filtered_dl <- drop_inputs(sdf_row, dl)
+    if (isTRUE(is.na(filtered_dl))) {
+        return(
+            list(
+                "solution" = rep(NA, n_observations(dl)),
+                "fused_network" = NULL
+            )
+        )
+    }
     fused_network <- snf_step(
         dl = drop_inputs(sdf_row, dl),
         scheme = sdf_row$"snf_scheme",
@@ -265,6 +274,13 @@ drop_inputs <- function(sdf_row, dl) {
         }
     ) # Converting to a logical type to do the selection
     in_keeps_log <- c(unlist(in_keeps_list))
+    if (!any(as.logical(in_keeps_log) == TRUE)) {
+        metasnf_warning(
+            "No data list components selected for inclusion in solution ",
+            sdf_row$"solution", "." 
+        )
+        return(NA)
+    }
     # The selection
     selected_dl <- dl[in_keeps_log]
     return(selected_dl)
@@ -295,7 +311,7 @@ get_dist_matrix <- function(df,
                             cat_dist_fn,
                             mix_dist_fn,
                             weights_row) {
-    # Move subject keys into data frame rownames
+    # Move subject keys into data frame row names
     df <- data.frame(df, row.names = "uid")
     # Trim down of the full weights row
     weights_row_trim <-
@@ -373,7 +389,7 @@ snf_step <- function(dl,
 #' fused network.
 #'
 #' domain_merge: Given a data list, returns a new data list where all data objects of
-#' a particlar domain have been concatenated.
+#' a particular domain have been concatenated.
 #'
 #' two_step_merge: Individual data frames into individual similarity matrices into one fused
 #' network per domain into one final fused network.

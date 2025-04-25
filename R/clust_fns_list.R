@@ -1,4 +1,4 @@
-#' Build a clusteing algorithms list
+#' Build a clustering algorithms list
 #'
 #' This function can be used to specify custom clustering algorithms to apply
 #' to the final similarity matrices produced by each run of the batch_snf
@@ -156,20 +156,6 @@ check_cfll_fn_args <- function(cfll) {
             "imilarity_matrix`."
         )
     }
-}
-
-#' Summarize a clust_fns_list object
-#'
-#' @param cfl A `clust_fns_list` class object.
-#' @return summary_df "data.frame" class object containing the name and index
-#'  of each clustering algorithm in te provided `clust_fns_list`.
-#' @export
-summarize_clust_fns_list <- function(cfl) {
-    summary_df <- data.frame(
-        alg_number = seq_along(cfl),
-        algorithm = names(cfl)
-    )
-    return(summary_df)
 }
 
 #' Built-in clustering algorithms

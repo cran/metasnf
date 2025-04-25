@@ -2,7 +2,7 @@
 % Please edit documentation in R/batch_snf.R
 \name{batch_snf}
 \alias{batch_snf}
-\title{Run variations of SNF.}
+\title{Run variations of SNF}
 \usage{
 batch_snf(dl, sc, processes = 1, return_sim_mats = FALSE, sim_mats_dir = NULL)
 }
@@ -66,6 +66,6 @@ sc <- snf_config(input_dl, n_solutions = 3)
 sol_df <- batch_snf(input_dl, sc)
 
 # A solutions data frame with similarity matrices:
-# sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-# sim_mats_list(sol_df)
+sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+sim_mats_list(sol_df)
 }

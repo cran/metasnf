@@ -113,15 +113,32 @@ data_list <- function(...,
         }
     }
     # Assign names to the nested list elements
-    named_entries <- dll |> lapply(
+    all_correct_names <- dll |>
+        lapply(
+            function(x) {
+                all(c("data", "name", "domain", "type") %in% names(x))
+            }
+        ) |>
+        unlist() |>
+        all()
+    all_null_names <- dll |> lapply(
         function(x) {
-            return(sum(names(x) == ""))
+            is.null(names(x))
         }
-    )
-    if (all(named_entries == 0)) {
+    ) |>
+        unlist() |>
+        all()
+    if (all_null_names) {
         dll_names <- c("data", "name", "domain", "type")
         dll <- lapply(dll, stats::setNames, dll_names)
-    } else if (!(all(named_entries == 4))) {
+    } else if (all_correct_names) {
+        dll <- lapply(
+            dll,
+            function(x) {
+                x[c("data", "name", "domain", "type")]
+            }
+        )
+    } else {
         metasnf_error(
             "Please either specify names (i.e., data = ...,",
             " name = ..., domain = ..., type = ...) for all of the",
@@ -130,7 +147,7 @@ data_list <- function(...,
     }
     # Additional formatting
     dll <- dll |>
-        ensure_dll_df() |> # format the "data" subitem as a data frame
+        ensure_dll_df() |> # format the "data" item as a data frame
         convert_uids(uid) |> # Convert data frame UID column to "uid"
         remove_dll_incomplete() |> # drop observations without complete data
         prefix_dll_uid() |> # append "uid_" to the literal UID values
@@ -144,11 +161,11 @@ data_list <- function(...,
     return(dl)
 }
 
-#' Ensure the data subitem of each component is a `data.frame` class object
+#' Ensure the data item of each component is a `data.frame` class object
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return The provided dll with the data subitem of each component as a 
+#' @return The provided dll with the data item of each component as a
 #'  data frame.
 ensure_dll_df <- function(dll) {
     lapply(
@@ -168,7 +185,7 @@ ensure_dll_df <- function(dll) {
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @param uid (string) the name of the uid column currently used data
-#' @return dll The provided nested list with "uid" as UID.
+#' @return The provided nested list with "uid" as UID.
 convert_uids <- function(dll, uid) {
     dll <- lapply(dll,
         function(x, uid) {
@@ -200,14 +217,13 @@ convert_uids <- function(dll, uid) {
 
 #' Remove observations with incomplete data from a data list-like list object
 #'
-#' Helper function during `data_list` class initialization. First applies 
+#' Helper function during `data_list` class initialization. First applies
 #' `stats::na.omit()` to the data frames named "data" within a nested list.
 #' Then removes any observations that are not present across all data frames.
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return dll The provided data list-like object with missing observations
-#'  removed.
+#' @return The provided dll with missing observations removed.
 remove_dll_incomplete <- function(dll) {
     all_uids <- unique(unlist(lapply(dll, function(x) x$"data"$"uid")))
     uids_no_na <- lapply(dll, function(x) stats::na.omit(x$"data")$"uid")
@@ -237,7 +253,7 @@ remove_dll_incomplete <- function(dll) {
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return dl A data list with UIDs prefixed with the string "uid_"
+#' @return A data list with UIDs prefixed with the string "uid_".
 prefix_dll_uid <- function(dll) {
     dll_prefixed <- lapply(
         dll,
@@ -249,12 +265,11 @@ prefix_dll_uid <- function(dll) {
     return(dll_prefixed)
 }
 
-#' Sort data frames in a data list by their unique ID values.
+#' Sort data frames in a data list by their unique ID values
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return arranged_dl The data list-like object with all data frames sorted
-#'  by uid.
+#' @return The data list-like object with all data frames sorted by uid.
 arrange_dll <- function(dll) {
     data_objects <- lapply(dll, function(x) x[[1]])
     arranged_data_objects <- data_objects |>
@@ -274,7 +289,7 @@ arrange_dll <- function(dll) {
 #'
 #' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
-#' @return domain_list list of domains
+#' @return A character vector of domains.
 domains <- function(dl) {
     domain_list <- lapply(dl, function(x) x$"domain")
     return(domain_list)
@@ -307,8 +322,6 @@ reorder_dl_uids <- function(dl, ordered_uids) {
 #' @return A data list ("list"-class object) with adjusted feature names.
 #' @export
 #' @examples
-#' library(metasnf)
-#'
 #' dl <- data_list(
 #'     list(pubertal, "pubertal_status", "demographics", "continuous"),
 #'     list(anxiety, "anxiety", "behaviour", "ordinal"),
@@ -385,7 +398,7 @@ is_data_list <- function(x) {
 }
 
 #' Constructor for `data_list` class object
-#' 
+#'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @return A `data_list` object, which is a nested list with class `data_list`.
@@ -437,10 +450,10 @@ new_data_list <- function(dll) {
 }
 
 #' Validator for data_list class object
-#' 
+#'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return If dll has a valid structure for a `data_list` class object, 
+#' @return If dll has a valid structure for a `data_list` class object,
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_data_list <- function(dll) {
     class(dll) <- setdiff(class(dll), "data_list")
@@ -533,7 +546,7 @@ check_dll_four_subitems <- function(dll) {
     }
 }
 
-#' Check valid subitem names for a data list-like list
+#' Check valid item names for a data list-like list
 #'
 #' Error if data list-like structure doesn't have nested names of "data",
 #' "name", "domain", and "type".
@@ -547,7 +560,7 @@ check_dll_subitem_names <- function(dll) {
         function(x) {
             identical(names(x), c("data", "name", "domain", "type"))
         }
-    ) |> 
+    ) |>
         unlist() |>
         all()
     if (!correct_names) {
@@ -657,7 +670,7 @@ check_dll_types <- function(dll) {
         dll,
         function(x) {
             x$"type" %in% c(
-                "continuous", 
+                "continuous",
                 "discrete",
                 "ordinal",
                 "categorical",
@@ -676,7 +689,7 @@ check_dll_types <- function(dll) {
     }
 }
 
-#' Error if empty input provided during data list initalization
+#' Error if empty input provided during data list initialization
 #'
 #' @keywords internal
 #' @param data_list_input Input data provided for data list initialization.
@@ -691,7 +704,7 @@ check_dll_empty_input <- function(data_list_input) {
     }
 }
 
-#' Lapply-like function for data list objects
+#' Apply-like function for data list objects
 #'
 #' This function enables manipulating a `data_list` class object with lapply
 #' syntax without removing that object's `data_list` class attribute. The
@@ -711,7 +724,7 @@ check_dll_empty_input <- function(data_list_input) {
 #'     list(abcd_colour, "colour", "likes", "categorical"),
 #'     uid = "patient"
 #' )
-#' 
+#'
 #' dl_lower <- dlapply(
 #'     dl,
 #'     function(x) {

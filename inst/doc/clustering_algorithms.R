@@ -108,21 +108,19 @@ sc
 #     return(solution)
 # }
 
-## -----------------------------------------------------------------------------
-sol_df <- batch_snf(
-    dl,
-    sc,
-    return_sim_mats = TRUE
-)
-
-# Similarity matrices are in the list below:
-similarity_matrices <- sim_mats_list(sol_df)
-
-length(similarity_matrices)
-
-dim(similarity_matrices[[1]])
-
-# Your manual clustering goes here...
+## ----eval = FALSE-------------------------------------------------------------
+# sol_df <- batch_snf(
+#     dl,
+#     sc,
+#     return_sim_mats = TRUE
+# )
+# 
+# # Similarity matrices are in the list below:
+# similarity_matrices <- sim_mats_list(sol_df)
+# 
+# first_similarity_matrix <- similarity_matrices[[1]]
+# 
+# # Your manual clustering goes here...
 
 ## ----eval = FALSE-------------------------------------------------------------
 # library(dbscan)
@@ -166,10 +164,7 @@ dl <- data_list(
 )
 
 set.seed(42)
-sc <- snf_config(
-    dl = dl,
-    n_solutions = 5
-)
+sc <- snf_config(dl = dl, n_solutions = 1)
 
 sol_df <- batch_snf(
     dl = dl,
@@ -180,8 +175,6 @@ sol_df <- batch_snf(
 similarity_matrices <- sim_mats_list(sol_df)
 
 representative_sm <- similarity_matrices[[1]]
-
-representative_sms <- similarity_matrices[c(1, 2)]
 
 distance_matrix1 <- as.dist(
     max(representative_sm) - representative_sm

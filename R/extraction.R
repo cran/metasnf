@@ -1,4 +1,17 @@
 #' @export
+`[.clust_fns_list` <- function(x, i, ...) {
+    extra_args <- list(...)
+    if (length(extra_args) > 0) {
+        metasnf_error(
+            "Incorrect number of dimensions for clust_fns_list subsetting."
+        )
+    }
+    result <- NextMethod()
+    class(result) <- c("clust_fns_list", "list")
+    result
+}
+
+#' @export
 `[.data_list` <- function(x, i, ...) {
     extra_args <- list(...)
     if (length(extra_args) > 0) {
@@ -14,8 +27,29 @@
 }
 
 #' @export
-`[.settings_df` <- function(x, i, j, ...) {
+`[.dist_fns_list` <- function(x, i, ...) {
     result <- NextMethod()
+    class(result) <- "list"
+    result <- tryCatch(
+        expr = {
+            result <- validate_dist_fns_list(result)
+            result <- new_dist_fns_list(result)
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
+    return(result)
+}
+
+#' @export
+`[.settings_df` <- function(x, i, j, ...) {
+    if (missing(j) & nargs() == 2) {
+        return(x[i, ])
+    } else {
+        result <- NextMethod()
+    }
     class(result) <- setdiff(class(result), "settings_df")
     result <- tryCatch(
         expr = {

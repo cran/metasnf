@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{arrange_dll}
 \alias{arrange_dll}
-\title{Sort data frames in a data list by their unique ID values.}
+\title{Sort data frames in a data list by their unique ID values}
 \usage{
 arrange_dll(dll)
 }
@@ -10,10 +10,9 @@ arrange_dll(dll)
 \item{dll}{A data list-like \code{list} class object.}
 }
 \value{
-arranged_dl The data list-like object with all data frames sorted
-by uid.
+The data list-like object with all data frames sorted by uid.
 }
 \description{
-Sort data frames in a data list by their unique ID values.
+Sort data frames in a data list by their unique ID values
 }
 \keyword{internal}
