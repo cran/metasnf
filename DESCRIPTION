@@ -1,6 +1,6 @@
 Package: metasnf
 Title: Meta Clustering with Similarity Network Fusion
-Version: 2.1.2
+Version: 2.3.0
 Authors@R: 
     c(
         person(
@@ -37,8 +37,8 @@ RoxygenNote: 7.3.2
 Imports: cli, cluster, data.table, digest, dplyr, ggplot2, grDevices,
         MASS, mclust, methods, progressr, purrr, RColorBrewer, rlang,
         SNFtool, stats, tibble, tidyr, utils
-Suggests: circlize, ComplexHeatmap, InteractiveComplexHeatmap, clv,
-        future, future.apply, knitr, rmarkdown, testthat (>= 3.0.0),
+Suggests: circlize, ComplexHeatmap, InteractiveComplexHeatmap, future,
+        future.apply, knitr, rmarkdown, testthat (>= 3.0.0),
         ggalluvial, lifecycle, dbscan
 Config/testthat/edition: 3
 Depends: R (>= 4.1.0)
@@ -48,7 +48,7 @@ URL: https://branchlab.github.io/metasnf/,
         https://github.com/BRANCHlab/metasnf/
 BugReports: https://github.com/BRANCHlab/metasnf/issues
 NeedsCompilation: no
-Packaged: 2025-04-28 14:53:31 UTC; prashanth
+Packaged: 2026-06-19 15:39:38 UTC; prashanth
 Author: Prashanth S Velayudhan [aut, cre],
   Xiaoqiao Xu [aut],
   Prajkta Kallurkar [aut],
@@ -67,4 +67,4 @@ Author: Prashanth S Velayudhan [aut, cre],
   Anne L Wheeler [aut, ths]
 Maintainer: Prashanth S Velayudhan <psvelayu@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-04-28 18:20:02 UTC
+Date/Publication: 2026-06-19 19:00:02 UTC

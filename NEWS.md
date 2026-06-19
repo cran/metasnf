@@ -1,3 +1,21 @@
+# metasnf 2.3.0
+
+## Other
+
+- As a result of the package `clv` being archived from CRAN and thus no longer usable as a dependency, the functions responsible for calculating the quality Dunn indices and Davies-Bouldin indices have been re-implemented from scratch. Previously, these functions presented a grid of metrics across various combinations of inter- and intra-distance methods to use when processing dissimilarity matrices.
+
+# metasnf 2.2.0
+
+## Bug fixes
+
+- `snf_config()` would only sample from the first 2 functions available in the `clust_fns_list` unless further specified with the `clustering_algorithms` parameter. This unintuitive behaviour has been resolved. The `clustering_algorithms` parameter in `snf_config()` has been deprecated and clustering algorithm sampling is now based entirely on the available `clust_fns_list`.
+
+# metasnf 2.1.3
+
+## Bug fixes
+
+- Fixed `auto_plot()` function incorrectly inverting labels on bar plots of binary features.
+
 # metasnf 2.1.2
 
 - Wrap additional examples in `donttest`
